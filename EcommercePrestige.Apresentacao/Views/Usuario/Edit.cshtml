@@ -1,0 +1,165 @@
+﻿@model EcommercePrestige.Application.ViewModel.UsuarioEmpresaAggregateViewModel
+@{
+    Layout = "_LayoutAdm";
+}
+<div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-2">
+        <button class="btn btn-primary" onclick="location.href = '@Url.Action("Create", "Usuario")'"> Redefinir Senha</button>
+    </div>
+    <div class="col-md-4">
+        @if (Model.Usuario.Administrador)
+        {
+            <button type="button" class="btn btn-danger float-left" onclick="location.href = '@Url.Action("SetarAdmin", "Usuario", new {userId = Model.Usuario.UserId, statusAdmin = Model.Usuario.Administrador})'"> Remover Admin</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-success float-left" onclick="location.href = '@Url.Action("SetarAdmin", "Usuario", new {userId = Model.Usuario.UserId, statusAdmin = Model.Usuario.Administrador})'"> Tornar Administrador</button>
+        }
+
+    </div>
+    <div class="col-md-6">
+        @{
+            if (Model.EmailConfirmado)
+            {
+
+                <p style="float: right;">Email Confirmado: <i class="fa fa-check-circle" style="color: green;"></i> Sim</p>
+
+            }
+            else
+            {
+                <button class="btn btn-success" style="float: right; margin-left: 5px;" onclick="location.href = '@Url.Action("ReenviarConfirmacaoEmail", "Usuario", new{userId = Model.Usuario.UserId})'"> Reenviar Confirmação</button>
+                <p style="float: right;">Email Confirmado: <i class="fa fa-times-circle" style="color: red;"></i> Não</p>
+            }
+        }
+
+    </div>
+
+</div>
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Usuario</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="Usuario" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Usuario.UserId" />
+            <input type="hidden" asp-for="Usuario.Id" />
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Usuario.NomeCompleto">Nome Usuario</label>
+                    <input type="text" class="form-control" asp-for="Usuario.NomeCompleto" />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="NewEmail">Email</label>
+                    <input type="text" class="form-control" asp-for="NewEmail" />
+                    <input type="hidden" asp-for="Email" />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label" asp-for="Usuario.DescontoCliente">Desc</label>
+                    <input type="text" class="form-control" asp-for="Usuario.DescontoCliente" placeholder="Ex. 10.0"/>
+                </div>
+                <div class="col-md-2" style="align-self: flex-end;">
+                    <input type="checkbox" asp-for="Usuario.BloqueioManual" data-val="true" and value="true" />
+                    <label class="control-label" asp-for="Usuario.BloqueioManual">Bloqueado</label>
+                </div>
+                <div class="col-md-2" style="align-self: flex-end;">
+                    <input type="checkbox" asp-for="Usuario.Exibir" data-val="true" and value="true" />
+                    <label class="control-label" asp-for="Usuario.Exibir">Exibir Empresa</label>
+                </div>
+                <div class="col-md-1" style="align-self: flex-end;">
+                    <button type="submit" class="btn btn-primary" style="float: right;"> Salvar</button>
+                </div>
+
+            </div>
+        @if (Model.Usuario.BloqueioAutomatico && !Model.Usuario.Verificado)
+        {
+            <hr/>
+            <div class="form-group row">
+                <div class="col-md-2 offset-8">
+                    <button type="button" class="btn btn-success" onclick="location.href = '@Url.Action("StatusCadastro", "Usuario", new {status = "aprovado", userId = Model.Usuario.UserId})'"> Permitir cadastro</button>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger float-right" onclick="location.href = '@Url.Action("StatusCadastro", "Usuario", new {status = "reprovado", userId = Model.Usuario.UserId})'"> Recusar Cadastro</button>
+                </div>
+
+            </div>
+        }
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Empresa</h6>
+    </div>
+    <div class="card-body">
+        <form>
+            <div class="form-group row">
+                <input type="hidden" asp-for="Empresa.Id" />
+                <input type="hidden" asp-for="Empresa.UserId" />
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Cnpj">CNPJ</label>
+                    <input class="form-control" asp-for="Empresa.Cnpj" readonly />
+                </div>
+                <div class="col-md-5">
+                    <label class="control-label" asp-for="Empresa.RazaoSocial">Razão Social</label>
+                    <input type="text" class="form-control" asp-for="Empresa.RazaoSocial" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Empresa.NomeOtica">Nome da otica</label>
+                    <input type="text" class="form-control" asp-for="Empresa.NomeOtica" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Cnae">CNAE</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Cnae" readonly />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Telefone">Telefone</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Telefone" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Cep">CEP</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Cep" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Empresa.Logradouro">Logradouro</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Logradouro" readonly />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label" asp-for="Empresa.Numero">Numero</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Numero" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Complemento">Complemento</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Complemento" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Bairro">Bairro</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Bairro" readonly />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Empresa.Municipio">Municipio</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Municipio" readonly />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label" asp-for="Empresa.Uf">UF</label>
+                    <input type="text" class="form-control" asp-for="Empresa.Uf" readonly />
+                </div>
+
+            </div>
+            @{
+                if (Model.Empresa.Id > 0)
+                {
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Edit","Empresa", new {id=Model.Empresa.Id})'"> Editar Empresa</button>
+                    </div> 
+                }
+            }
+
+        </form>
+    </div>
+</div>

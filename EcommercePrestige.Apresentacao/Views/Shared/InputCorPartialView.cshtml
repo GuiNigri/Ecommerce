@@ -1,0 +1,34 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoCorInputModel
+
+<div class="form-group row">
+    <input type="hidden" asp-for="ProdutoId" />
+    <div class="col-md-2">
+        <label class="control-label"> Cor</label>
+        <select class="form-control" asp-for="CorId" asp-items="@Model.CoresSelect">
+        </select>
+    </div>
+    <div class="col-md-1" style="align-self: flex-end;">
+        <label class="control-label" asp-for="Estoque"> Estoque</label>
+        <input class="form-control" type="text" asp-for="Estoque" />
+    </div>
+    <div class="col-md-1" style="align-self: flex-end;">
+        <label class="control-label" asp-for="CodigoInterno"> CI</label>
+        <input class="form-control" asp-for="CodigoInterno" />
+    </div>
+    <div class="col-md-2" style="align-self: flex-end;">
+        <input type="checkbox" asp-for="Gold" data-val="true" and value="true" />
+        <label class="control-label" asp-for="Gold">Kit Gold</label>
+    </div>
+    <div class="col-md-2" style="align-self: flex-end;">
+        <input type="checkbox" asp-for="Silver" data-val="true" and value="true" />
+        <label class="control-label" asp-for="Silver">Kit Silver</label>
+    </div>
+    <div class="col-md-2" style="align-self: flex-end;">
+        <input type="checkbox" asp-for="Basic" data-val="true" and value="true" />
+        <label class="control-label" asp-for="Basic">Kit Basic</label>
+    </div>
+    <div class="col-md-2" style="align-self: flex-end;">
+        <br />
+        <button class="btn btn-success form-control"> Adicionar</button>
+    </div>
+</div>

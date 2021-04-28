@@ -1,0 +1,303 @@
+﻿@model EcommercePrestige.Application.ViewModel.CarrinhoPagamentoViewModel
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1" id="pagamento-dados">
+                <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+                <div class="section-title">
+                    <h4 class="title">Pagamento</h4>
+                </div>
+                <form asp-controller="Pedido" asp-action="Finalizar" method="post" onsubmit="finalizar()" id="dadosPagamento">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="FormaPagamento"> Forma de pagamento </label>
+                            <select asp-for="FormaPagamento" class="form-control input" required asp-items="@Model.FormasPagamento" id="formaPag"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="parcelas"> Parcelas </label>
+                            <select class="form-control input" id="parcelas" name="parcelas">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label asp-for="ObsPagamento"> Observações/Solicitações </label>
+                            <textarea asp-for="ObsPagamento" class="form-control input"></textarea>
+                        </div>
+                    </div>
+                    <div class="section-title">
+                        <h4 class="title">Envio</h4>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label asp-for="Cep" class="control-label"> CEP </label>
+                            <input type="text" asp-for="Cep" onblur="getCep()" id="cep" name="cep" required class="form-control input" />
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="load">
+                                <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-9">
+                            <label asp-for="Rua" class="control-label"> Rua </label>
+                            <input type="text" asp-for="Rua" readonly required class="form-control input" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Numero" class="control-label"> Numero </label>
+                            <input type="text" asp-for="Numero" class="form-control input" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="Bairro" class="control-label"> Bairro </label>
+                            <input type="text" asp-for="Bairro" readonly class="form-control input" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Complemento" class="control-label"> Complemento </label>
+                            <input type="text" asp-for="Complemento" class="form-control input" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="Cidade"> Cidade </label>
+                            <input type="text" asp-for="Cidade" readonly class="form-control input" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Estado"> Estado </label>
+                            <input type="text" asp-for="Estado" readonly class="form-control input" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="checkbox" required /> Declaro que li e <a href="#"><u>aceito os termos</u></a> da Prestige do Brasil.
+                    </div>
+                    <div class="form-group row">
+                        <div id="ModalPagamentoNormal">
+                            <div class="col-md-5">
+                                <button type="submit" class="primary-btn" id="btnFinalizar">Finalizar Pedido</button>
+                            </div>
+                        </div>
+                        <div id="ModalPagamentoCartao" style="display:none;">
+                            <div class="col-md-5">
+                                <button type="button" class="primary-btn" id="btnFinalizar" onclick="pagarme()">Pagamento</button>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="loadFinalizar">
+                                <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i> Finalizando...
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="transactionData" name="transactionData" />
+                    <input type="hidden" id="servicoFrete" name="servicoFrete" />
+                </form>
+            </div>
+            <div class="col-md-4 col-md-offset-1" id="pagamento-informacoes">
+                <div class="section-title">
+                    <h4 class="title"><i class="fa fa-info-circle"></i> Importante</h4>
+                </div>
+                <p class="alert control-label text-uppercase" style="background-color: steelblue; color: white;">
+                    <i class="fa fa-dot-circle-o"></i> Todos os pedidos finalizados passarão por uma analise antes de serem aprovados.<br /><br />
+                    <i class="fa fa-dot-circle-o"></i> Caso necessário entraremos em contato para esclarecer detalhes sobre pagamento, descontos e entrega.<br /><br />
+                    <i class="fa fa-dot-circle-o"></i> Podem ser solicitadas outras opções de pagamento/parcelamento, caso tenha interesse deixe sua solicitação no campo <b>observações/solicitações</b> ao lado.
+                </p>
+            </div>
+            <div class="col-md-4 col-md-offset-1">
+                <div class="section-title">
+                    <h4 class="title"><i class="fa fa-truck"></i> Frete</h4>
+                </div>
+                <div id="freteModal">
+                    <partial name="PagamentoFreteViewPartial" model="@Model.ModalidadeFretes" />
+                </div>
+            </div>
+            <div class="col-md-4 col-md-offset-1" id="pagamento-informacoes-valores">
+                <div class="section-title">
+                    <h4 class="title"><i class="fa fa-th-list"></i> Resumo do Pedido</h4>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <h5 class="text-uppercase">Sub Total </h5>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <h5 style="color: steelblue;" id="subtotalModal">@Model.ValorPedido.ToString("C") </h5>
+                </div>
+                <div class="col-md-12" style="padding: 0px;">
+                    <hr/>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <h5 class="text-uppercase">Frete </h5>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <h5 class="text-uppercase" style="color: steelblue;" id="freteModalExibicao">R$ 0,00 </h5>
+                </div>
+                <div class="col-md-12" style="padding: 0px;">
+                    <hr/>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <h4 class="text-uppercase">Valor Total </h4>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <h4 class="text-uppercase" style="color: steelblue;" id="totalModal">@Model.ValorPedido.ToString("C") </h4>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    @{
+        var valorPedido = Model.ValorPedido.ToString("N2").Replace(".","").Replace(",", ".");
+    }
+    var valorPedido = 0;
+
+    function pagarme() {
+        // inicia a instância do checkout
+        var checkout = new PagarMeCheckout.Checkout({
+            encryption_key: 'ek_live_poK64T5jiF2i5eW5s6ZVwhV8sJTHc6',
+            success: function (data) {
+                if (data != null) {
+                    finalizar();
+                    var dataJson = JSON.stringify(data);
+
+                    document.getElementById("transactionData").value = dataJson;
+                    document.getElementById("dadosPagamento").submit();
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            },
+            close: function () {
+                console.log('The modal has been closed.');
+            }
+        });
+
+        var parcelas = parseInt(document.getElementById("parcelas").value);
+
+        checkout.open({
+            amount: valorPedido,
+            customerData: 'true',
+            createToken: 'false',
+            paymentMethods: 'credit_card',
+            maxInstallments: parcelas,
+            freeInstallments: parcelas,
+            interestRate: 1.2,
+            paymentButtonText: 'Finalizar Compra'
+        });
+
+    }
+
+    function setFrete(valorFrete, servicoEnvio) {
+
+        console.log(valorFrete);
+        console.log(servicoEnvio);
+
+        valorPedido = String((@valorPedido + valorFrete).toFixed(2)).replace(",", "").replace(".", "");
+
+
+        document.getElementById('totalModal').innerHTML = `<h4 style='color: steelblue;'>R$  ${parseFloat(valorPedido / 100).toLocaleString('pt-br')} </h4>`;
+        document.getElementById('freteModalExibicao').innerHTML = `<h5 class="text-uppercase" style="color: steelblue;" id="freteModalExibicao">R$  ${parseFloat(valorFrete).toLocaleString('pt-br')} </h5>`;
+        document.getElementById('servicoFrete').value = servicoEnvio;
+    };
+
+    $("#formaPag").change(function() {
+        var frmPag = $(this).val();
+        $.ajax({
+            url: '@Url.Action("GetParcelas", "Carrinho")',
+            dataType: "json",
+            type: 'get',
+            data: {
+                formaPagamento: frmPag,
+                valor: "@Model.ValorPedido.ToString("N")"
+            },
+            success: function(result) {
+                $("#parcelas").html(result);
+            },
+            error: function(result) {
+                alert("Erro");
+            }
+        });
+
+        if (frmPag == "cartao") {
+            document.getElementById("ModalPagamentoCartao").style.display = 'block';
+            document.getElementById("ModalPagamentoNormal").style.display = 'none';
+        }
+        else {
+            document.getElementById("ModalPagamentoCartao").style.display = 'none';
+            document.getElementById("ModalPagamentoNormal").style.display = 'block';
+        }
+    });
+
+
+    function getFrete() {
+        $("#freteModal").html("Calculando Frete ...");
+
+        var newZipCode = $("#cep").val();
+        $('.load').show();
+        $.ajax({
+            url: '@Url.Action("GetFrete", "Carrinho")',
+            type: 'get',
+            data: {
+                cepDestino: newZipCode
+            },
+            success: function (result) {
+                $("#freteModal").html(result);
+                console.log("sucesso ao buscar Cep");
+
+            },
+            error: function(result) {
+                console.log("Erro ao buscar Cep");
+            }
+        });
+    };
+
+    function getCep() {
+        var id = $("#cep").val();
+        $('.load').show();
+        $.ajax({
+            url: '@Url.Action("GetAddress", "Carrinho")',
+            dataType: "json",
+            type: 'get',
+            data: {
+                cep: id
+            },
+            success: function(result) {
+                document.getElementById("Rua").value = result.rua;
+                document.getElementById("Bairro").value = result.bairro;
+                document.getElementById("Cidade").value = result.cidade;
+                document.getElementById("Estado").value = result.estado;
+                document.getElementById("Numero").value = "";
+                document.getElementById("Complemento").value = "";
+                getFrete();
+                $('.load').hide();
+            },
+            error: function(result) {
+                $('.load').hide();
+                document.getElementById("Rua").value = '';
+                document.getElementById("Bairro").value = '';
+                document.getElementById("Cidade").value = '';
+                document.getElementById("Estado").value = '';
+                document.getElementById("freteModal").innerHTML = '<p>Erro ao calcular frete</p>';
+                alert("CEP não encontrado!");
+            }
+        });
+    };
+
+    function finalizar() {
+        document.getElementById('btnFinalizar').disabled = true;
+        $('.loadFinalizar').show();
+    }
+
+
+    $(document).ready(function() {
+        $('.load').hide();
+        $('.loadFinalizar').hide();
+    });
+</script>
+

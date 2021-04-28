@@ -1,0 +1,132 @@
+﻿@model EcommercePrestige.Application.ViewModel.CarrinhoViewModel
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="order-summary clearfix">
+                    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+                    <div class="section-title">
+                        <h3 class="title">Carrinho</h3>
+                    </div>
+                    @{
+                        if (Model.CarrinhoViewModels.Any())
+                        {
+
+
+                            <table class="shopping-cart-table table">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th></th>
+                                        <th class="text-center">Preço</th>
+                                        <th class="text-center">Quantidade</th>
+                                        <th class="text-center">Total</th>
+                                        <th class="text-right"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.CarrinhoViewModels)
+                                        {
+                                            if (item.Produto != null)
+                                            {
+                                                <tr>
+                                                    <td class="thumb"><img src="@item.Produto.UriFoto" alt=""></td>
+                                                    <td class="details">
+                                                        <a asp-controller="Produtos" asp-action="Details" asp-route-id="@item.Produto.Id" asp-route-idCor="@item.CorId">Armação @item.Produto.Referencia</a>
+                                                        <ul class="color-option" style="display: grid;">
+                                                            <li><span>Marca: @item.Produto.MarcaModel</span></li>
+                                                            <li class="active" style="display: inline-flex;"><span>Cor:</span><a style="background-image: url(@item.Cor.ImgUrl); margin-left: 10px; border-radius: 74px;" title="@item.Cor.Descricao"></a></li>
+                                                        </ul>
+                                                    </td>
+                                                    <td class="price text-center"><strong>R$ @item.Produto.ValorVenda</strong></td>
+                                                    <td class="qty text-center">
+                                                        <form asp-controller="Carrinho" asp-action="Atualizar" method="get">
+                                                            <input class="input" id="quantNumber" name="quantNumber" type="number" value="@item.QuantidadeIndividual">
+                                                            <input class="hidden" id="prodId" name="prodId" value="@item.Produto.Id">
+                                                            <input class="hidden" id="corId" name="corId" value="@item.Cor.Id">
+                                                            <button class="button-update" title="Atualizar"><i class="fa fa-refresh" style="margin-left: 10px;"></i></button>
+                                                        </form>
+                                                    </td>
+                                                    @{
+                                                        if (item.DescontoUnitarioProduto > 0.0)
+                                                        {
+                                                            var precoDesconto = double.Parse(item.Produto.ValorVenda) * item.QuantidadeIndividual - item.DescontoUnitarioProduto;
+
+                                                            <td class="total text-center"><strong class="primary-color">@precoDesconto.ToString("C")</strong> <del class="product-old-price" style="font-size: 14px; color: indianred;"> @item.ValorUnitarioTotal</del></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="total text-center"><strong class="primary-color">@item.ValorUnitarioTotal</strong></td>
+                                                        }
+                                                    }
+
+                                                    <td class="text-right"><button class="main-btn icon-btn" title="Remover" onclick="location.href = '@Url.Action("Remover", "Carrinho", new {prodId = item.Produto.Id, corId = item.Cor.Id})'"><i class="fa fa-close"></i></button></td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td class="thumb"><img src="https://img2.gratispng.com/20180625/iez/kisspng-aviator-sunglasses-computer-icons-5b3173bc8ad809.9682530515299675485687.jpg" alt=""></td>
+                                                    <td class="details">
+                                                        <a asp-controller="Kits" asp-action="Index" asp-route-id="@item.Kits.Id">Kit @item.Kits.Nome</a>
+                                                        <ul class="color-option" style="display: grid;">
+                                                            <li><span>Marca: Diversas</span></li>
+                                                            <li class="" style="display: inline-flex;"><span>Cor:</span><a style="margin-left: 10px;">N/A</a></li>
+                                                        </ul>
+                                                    </td>
+                                                    <td class="price text-center"><strong>R$ @item.Kits.ValorVenda</strong></td>
+                                                    <td class="qty text-center">
+                                                        <form asp-controller="Carrinho" asp-action="AtualizarKit" method="get">
+                                                            <input class="input" id="quantNumber" name="quantNumber" type="number" value="@item.QuantidadeIndividual">
+                                                            <input class="hidden" id="kitId" name="kitId" value="@item.Kits.Id">
+                                                            <button class="button-update" title="Atualizar"><i class="fa fa-refresh" style="margin-left: 10px;"></i></button>
+                                                        </form>
+                                                    </td>
+                                                    <td class="total text-center"><strong class="primary-color">@item.ValorUnitarioTotal</strong></td>
+                                                    <td class="text-right"><button class="main-btn icon-btn" title="Remover" onclick="location.href = '@Url.Action("Remover", "Carrinho", new {prodId = item.Kits.Id})'"><i class="fa fa-close"></i></button></td>
+                                                </tr>
+                                            }
+
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="empty" colspan="3"></th>
+                                        <th>SUBTOTAL</th>
+                                        <th colspan="2" class="total text-center" style="font-size: 18px; color: grey;">@Model.SubTotalPedido</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="empty" colspan="3"></th>
+                                        <th>DESCONTOS</th>
+                                        <th colspan="2" class="total text-center" style="font-size: 18px; color: indianred;">@Model.DescontoPedido</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="empty" colspan="3"></th>
+                                        <th>TOTAL</th>
+                                        <th colspan="2" class="total text-center">@Model.ValorTotalPedido</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="pull-right">
+                                <button class="primary-btn" style="background-color: black;" onclick="location.href = '@Url.Action("Index", "Produtos")'">Continuar Comprando</button>
+                                <button class="primary-btn" onclick="location.href = '@Url.Action("Pagamento", "Carrinho")'">Finalizar Pedido</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-4 col-md-offset-4">
+                                <h4>Nenhum produto encontrado no carrinho!</h4>
+                                <button class="primary-btn" style="margin-left: 25%; margin-top: 10px;" onclick="location.href = '@Url.Action("Index", "Produtos")'">Lista de Produtos</button>
+                            </div>
+                        }
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+﻿@model EcommercePrestige.Application.ViewModel.MaterialViewModel
+@{
+    Layout = "_LayoutAdm";
+}
+
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Material</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="Material" asp-action="Create" method="post">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label class="control-label" asp-for="Material">Marca</label>
+                    <input type="text" class="form-control" asp-for="Material" />
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary"> Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>

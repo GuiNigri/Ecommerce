@@ -1,0 +1,26 @@
+﻿@model IEnumerable<EcommercePrestige.Application.ViewModel.CorreioWebServiceViewModel>;
+
+
+@{
+    foreach (var frete in Model)
+    {
+        <div class="form-group row">
+            <div class="col-md-1">
+                <input type="radio" name="frete" id="frete" value="@frete.Servico" onclick="setFrete(@frete.Valor.Replace(",", "."),'@frete.Servico')" required />
+            </div>
+            <div class="col-md-2">
+                <p>@frete.Servico </p>
+            </div>
+            <div class="col-md-4">
+                <p>Valor: R$ @frete.Valor</p>
+            </div>
+            <div class="col-md-5">
+                <p>Prazo: @frete.PrazoEntrega dia(s) úteis</p>
+            </div>
+        </div>
+
+        <hr />
+    }
+}
+
+

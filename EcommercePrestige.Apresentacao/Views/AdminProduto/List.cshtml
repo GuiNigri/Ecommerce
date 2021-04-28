@@ -1,0 +1,134 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model EcommercePrestige.Application.ViewModel.ProdutoListAdmViewModel
+@{
+    Layout = "_LayoutAdm";
+}
+
+<div class="row">
+    <div class="col-md-5 col-xs-3" style="margin-bottom: 10px;">
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" asp-controller="AdminProduto" asp-action="Produtos" method="get">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-1 small" placeholder="Pesquisar" aria-label="Search" aria-describedby="basic-addon2" name="termo">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-search fa-fw"></i>
+                </a>
+                <!-- Dropdown - Messages -->
+                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                    <form class="form-inline mr-auto w-100 navbar-search" asp-controller="AdminProduto" asp-action="Produtos" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Pesquisar" aria-label="Search" aria-describedby="basic-addon2" name="termo">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-md-5" style="margin-bottom: 10px;">
+        <form class="form-inline mr-auto w-100 navbar-search" asp-controller="AdminProduto" asp-action="AtualizarEstoqueMassa" method="get">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="quantidade" name="quantidadeAtuMassa">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        Atualizar estoque em massa
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2" style="margin-bottom: 10px;">
+        <button style="float: right;" class="btn btn-primary" onclick="location.href = '@Url.Action("CreateEtapaBasico", "AdminProduto")'">Incluir Produto</button>
+    </div>
+</div>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lista de produtos</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-uppercase" id="dataTable" width="100%" cellspacing="0" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th>Referencia</th>
+                        <th>Material</th>
+                        <th>Genero</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        foreach (var item in Model.ListaProdutos)
+                        {
+                            <tr>
+                                <td>@item.Referencia</td>
+                                <td>@item.MaterialModel</td>
+                                <td>@item.Genero</td>
+                                <td>@item.ValorVenda</td>
+                                <td><button class="btn btn-primary" onclick="location.href = '@Url.Action("EditProduto", "AdminProduto", new {id = @item.Id})'"> Editar</button></td>
+                                @if (@item.StatusAtivacao == "AT")
+                                {
+                                    <td><button class="btn btn-danger" onclick="location.href = '@Url.Action("AlterarStatusAtivacaoProduto", "AdminProduto", new {idProduto = item.Id})'"> Inativar</button></td>
+                                }
+                                else if (@item.StatusAtivacao == "PE")
+                                {
+                                    <td><button class="btn btn-secondary"> Aguardando</button></td>
+                                }
+                                else
+                                {
+                                    <td><button class="btn btn-success" onclick="location.href = '@Url.Action("AlterarStatusAtivacaoProduto", "AdminProduto", new {idProduto = item.Id})'"> Ativar</button></td>
+                                }
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="float-right" style="display: inline-flex;">
+    <p>
+        Paginas: @Html.PagedListPager(
+                     Model.ListaProdutos,
+                     pagina => Url.Action("Produtos",
+                         new
+                         {
+                             pagina,
+                             termo = Model.Termo
+                         }
+                         ),
+                     new PagedListRenderOptions()
+                     {
+                         UlElementClasses = new List<string> { "store-pages" },
+
+                         DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                         DisplayLinkToPreviousPage = PagedListDisplayMode.Never
+
+                     })
+    </p>
+
+</div>

@@ -1,0 +1,102 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoComponentViewModel
+
+@{
+    var opacidade = "1";
+
+    if (Model.Produto.StatusProduto == "indisponivel")
+    {
+        opacidade = "0.5";
+    }
+
+}
+<div class="product product-single" style="opacity: @opacidade">
+    <div class="product-thumb">
+        @if (Model.Produto.StatusProduto == "new")
+        {
+            <div class="product-label">
+                <span style="font-size: 13px;">Lançamento</span>
+            </div>
+        }
+        else if (Model.Produto.StatusProduto == "indisponivel")
+        {
+            <div class="product-label">
+                <span style="font-size: 13px;">Indisponível</span>
+            </div>
+        }
+    </div>
+    @{
+        var idFoto = $"MainFoto{@Model.Produto.Id}";
+    }
+    <div class="product-thumb img-resize" id="@idFoto">
+        
+        <partial name="ProdutoFotoIndexViewPartial" model="Model.Produto.UriFoto" />
+
+    </div>
+    
+    <div class="product-body" style="padding-top: 0px; text-align: center;">
+
+        <h4 class="product-name text-uppercase" style="text-align: center;"><a style="font-size: 15px;">@Model.Produto.MarcaModel @Model.Produto.Referencia</a></h4>
+
+        @{
+            if (Model.ExibirPreco)
+            {
+                if (Model.Logado)
+                {
+                    <span style="font-size: 15px; margin: 5px 0; margin-bottom: 15px;" class="product-price">@Model.Produto.ValorVenda</span>
+                }
+                else
+                {
+                    <span style="font-size: 13px; margin: 5px 0; margin-bottom: 15px;" class="product-price text-uppercase"><a asp-area="Identity" asp-page="/Account/Login">faça o login para ver o valor!</a></span>
+                }
+            }
+
+        }
+
+        <ul class="color-option" id="selType" name="selType" style="text-align: center;" required>
+            @{
+                var i = 1;
+                var idCor = 0;
+                foreach (var cor in Model.CorProduto)
+                {
+
+                    if (i <= 7)
+                    {
+                        if (i == 1)
+                        {
+                            idCor = cor.Id;
+                        }
+                        var ci = $"| C{@cor.CodigoInternoCor}";
+
+                        if (cor.Estoque > 0)
+                        {
+                            <li class="liactive" value="@cor.CorId" id="imgvalue-@cor.Id"><a href="#" style="background-image: url(@cor.ImgCor); border-radius: 74px;" title="@cor.DescricaoCor  @ci" onclick="getFotos(@cor.Id,@Model.Produto.Id)"></a></li>
+
+                        }
+                        else
+                        {
+                            <li class="disabled-li"><a href="#" style="background-image: url(@cor.ImgCor); border-radius: 74px;" title="@cor.DescricaoCor @ci"></a></li>
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    i++;
+                }
+            }
+
+        </ul>
+        <div class="product-btns">
+            <form asp-controller="Produtos" asp-action="Details" method="get">
+                @{
+                    var idCorDetails = $"idCorDetails{@Model.Produto.Id}";
+                }
+                <input type="hidden" id="@idCorDetails" name="idCor" value="@idCor"/>
+                <input type="hidden" name="id" value="@Model.Produto.Id" />
+                <button type="submit" class="primary-btn add-to-cart" style="width: 100%;">Ver Produto</button>
+            </form>
+            
+        </div>
+    </div>
+</div>

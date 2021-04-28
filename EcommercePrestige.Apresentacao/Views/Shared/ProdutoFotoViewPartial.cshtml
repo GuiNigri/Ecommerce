@@ -1,0 +1,24 @@
+﻿@model IEnumerable<EcommercePrestige.Application.ViewModel.ProdutoFotoViewModel>
+
+<div id="product-main-view">
+    @{
+        foreach (var foto in Model)
+        {
+            <div class="product-view">
+                <img src="@foto.UriBlob" alt="">
+            </div>
+        }
+    }
+
+</div>
+<div id="product-view">
+    @{
+        foreach (var foto in Model)
+        {
+            <div class="product-view">
+                <img src="@foto.UriBlob" alt="">
+            </div>
+        }
+    }
+
+</div>

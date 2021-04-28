@@ -1,0 +1,57 @@
+﻿@model EcommercePrestige.Application.ViewModel.TextoHomeViewModel
+@{
+    Layout = "_LayoutAdm";
+}
+
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Textos Top Home</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="Home" asp-action="AdicionarTextoTopHome" method="post">
+            <div class="form-group row">
+                <div class="col-md-6" style="align-self: flex-end;">
+                    <label class="control-label" asp-for="Texto"> Texto (Max. 82 caracteres)</label>
+                    <input data-ls-module="charCounter" class="form-control" type="text" asp-for="Texto"  maxlength="82"/>
+                </div>
+                <div class="col-md-2" style="align-self: flex-end;">
+                    <br />
+                    <button type="submit" class="btn btn-success form-control"> Adicionar</button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table style="width: 50%" class="table table-bordered" id="dataTable">
+                <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Texto</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @{
+                    if (Model.Textos.Any())
+                    {
+                        foreach (var item in Model.Textos)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    @item.Id
+                                </td>
+                                <td class="text-center">
+                                    @item.Texto
+                                </td>
+                                <td class="text-center" style="text-align: center"><button class="btn btn-danger" onclick="location.href = '@Url.Action("RemoverTextoTopHome", "Home", new {id = @item.Id})'"><i class="fas fa-trash"></i></button></td>
+                            </tr>
+                        }
+                    }
+
+                }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

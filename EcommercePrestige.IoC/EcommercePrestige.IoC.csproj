@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EcommercePrestige.Application\EcommercePrestige.Application.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.BlobInfra\EcommercePrestige.Blob.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.CieloApiWebServices\EcommercePrestige.CieloApiWebServices.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.CorreiosApi\EcommercePrestige.CorreiosApi.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.Data\EcommercePrestige.Data.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.EmailApi\EcommercePrestige.EmailApi.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.Negocio\EcommercePrestige.Model.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.Services\EcommercePrestige.Services.csproj" />
+    <ProjectReference Include="..\EcommercePrestige.StoneCheckoutApi\EcommercePrestige.StoneCheckoutApi.csproj" />
+  </ItemGroup>
+
+</Project>

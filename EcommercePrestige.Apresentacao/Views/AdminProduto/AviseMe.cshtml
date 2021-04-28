@@ -1,0 +1,61 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model X.PagedList.IPagedList<EcommercePrestige.Application.ViewModel.AviseMeViewModel>
+@{
+    Layout = "_LayoutAdm";
+}
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Produtos Solicitados</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-uppercase" id="dataTable" width="100%" cellspacing="0" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th>Referencia</th>
+                        <th>Cor</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Referencia</td>
+                                <td>@item.Cor</td>
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="float-right" style="display: inline-flex;">
+    <p>
+        Paginas: @Html.PagedListPager(
+            Model,
+            pagina => Url.Action("GetAviseMe",
+                new
+                {
+                    pagina
+                }
+                ),
+            new PagedListRenderOptions()
+            {
+                UlElementClasses = new List<string> { "store-pages" },
+
+                DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Never
+
+            })
+    </p>
+
+</div>

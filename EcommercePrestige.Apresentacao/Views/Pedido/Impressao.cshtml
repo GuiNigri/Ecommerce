@@ -1,0 +1,284 @@
+﻿@using EcommercePrestige.Application.Enums
+@model EcommercePrestige.Application.ViewModel.ImpressaoPedidoViewModel
+
+@{
+    Layout = "_LayoutImpressao";
+}
+
+<div class="row" style="margin-top: 30px;">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="col-md-12">
+        <h3>PRESTIGE DO BRASIL ARTIGOS OTICOS LTDA - PEDIDO N° @Model.PedidoViewModel.Id</h3>
+    </div>
+    <div class="col-md-12">
+        <h5>Rua Mariz e Barros, 1001 - Sala 1004 - Tijuca - CEP 20270-004 - Rio de janeiro - RJ</h5>
+    </div>
+    <div class="col-md-12">
+        <h5>CNPJ 34.264.204/0001-51 - Inscrição Estadual 11.494.307</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Cliente</h4>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+                <th style="width: 20%">CNPJ</th>
+                <th style="width: 50%">Razão Social</th>
+                <th style="width: 33.33%">Nome Fantasia</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-uppercase">@Model.Empresa.Cnpj</td>
+                <td class="text-uppercase">@Model.Empresa.RazaoSocial</td>
+                <td class="text-uppercase">@Model.Empresa.NomeOtica</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="col-md-12"><hr/></div>
+    </div>
+    <div class="col-md-12">
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+                <th style="width: 20%">CEP</th>
+                <th style="width: 50%">Endereço</th>
+                <th style="width: 33.33%">Número/Comp</th>
+
+
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @{
+                        var complementaoNumero = $"{Model.Empresa.Numero}/{@Model.Empresa.Complemento}";
+                    }
+                    <td class="text-uppercase">@Model.Empresa.Cep</td>
+                    <td class="text-uppercase">@Model.Empresa.Logradouro</td>
+                    <td class="text-uppercase">@complementaoNumero</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="col-md-12"><hr/></div>
+    </div>
+    <div class="col-md-12">
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+            <th style="width: 20%">Bairro</th>
+            <th style="width: 50%">Cidade</th>
+            <th style="width: 33.33%">UF</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-uppercase">@Model.Empresa.Bairro</td>
+                <td class="text-uppercase">@Model.Empresa.Municipio</td>
+                <td class="text-uppercase">@Model.Empresa.Uf</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="col-md-12"><hr/></div>
+    </div>
+<div class="col-md-12">
+    <table style="width: 100%; margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th style="width: 20%">Contato</th>
+                <th style="width: 50%">Email</th>
+                <th style="width: 33.33%">Telefone</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-uppercase">@Model.Contato</td>
+                <td class="text-uppercase">@Model.Email</td>
+                <td class="text-uppercase">@Model.Empresa.Telefone</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Informações</h4>
+            @{
+                    var rastreio = Model.PedidoViewModel.Rastreio;
+                    string tipoEnvio;
+
+                    string dadosRastreio;
+
+                    switch (Model.PedidoViewModel.TipoDeEnvio)
+                    {
+                        case "correios":
+
+                            tipoEnvio = Model.PedidoViewModel.TipoDeEnvio;
+
+                            rastreio = Model.PedidoViewModel.Rastreio ?? "aguardando";
+
+                            dadosRastreio = $"{tipoEnvio} / {rastreio}";
+
+                            break;
+
+                        case "proprio":
+
+                            tipoEnvio = Model.PedidoViewModel.TipoDeEnvio;
+
+                            rastreio = "Não Existe";
+
+                            dadosRastreio = $"{tipoEnvio} / {rastreio}";
+
+                            break;
+
+                        default:
+
+                            dadosRastreio = "Aguardando";
+
+                            break;
+                    }
+
+
+            }
+
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+                <th style="width: 20%">Status</th>
+                <th style="width: 50%">Tipo de Entrega / Rastreio</th>
+                <th style="width: 33.33%">Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-uppercase">@Model.PedidoViewModel.Status</td>
+                <td class="text-uppercase">@dadosRastreio</td>
+                <td class="text-uppercase">@Model.PedidoViewModel.DataPedido</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+<div class="col-md-12">
+    <div class="section-title">
+        <h4 class="title">Financeiro</h4>
+    </div>
+</div>
+<div class="col-md-12">
+    <table style="width: 100%; margin-bottom: 20px;">
+        <thead>
+        <tr>
+            <th style="width: 20%">Pagamento</th>
+            <th style="width: 50%">Parcelas</th>
+            <th style="width: 33.33%">Sub Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-uppercase">@Model.PedidoViewModel.FormaDePagamento</td>
+            <td class="text-uppercase">@Model.PedidoViewModel.Parcelas</td>
+            <td class="text-uppercase">@Model.PedidoViewModel.SubTotal</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="col-md-12"><hr/></div>
+</div>
+<div class="col-md-12">
+    @{
+        var frete = Model.PedidoViewModel.Frete;
+        var desconto = Model.PedidoViewModel.Desconto;
+
+        if (Model.PedidoViewModel.Status == PedidosStatus.Confirmado || Model.PedidoViewModel.Status == PedidosStatus.Efetuado)
+        {
+            frete = "aguardando";
+
+            var descontoVerificador = Model.PedidoViewModel.Desconto.Replace("R$", "");
+
+            if (double.Parse(descontoVerificador) == 0)
+            {
+                desconto = "processando";
+            }
+        }
+    }
+    <table style="width: 100%; margin-bottom: 20px;">
+        <thead>
+        <tr>
+            <th style="width: 20%">Desconto</th>
+            <th style="width: 50%">Frete</th>
+            <th style="width: 33.33%">Valor Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-uppercase">@desconto</td>
+            <td class="text-uppercase">@frete</td>
+            <td class="text-uppercase">@Model.PedidoViewModel.ValorTotal</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    <div>
+    </div>
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Produtos do pedido - @Model.QuantidadeArmacoes Peças</h4>
+        </div>
+        <table class="shopping-cart-table table">
+            <thead>
+            <tr>
+                <th>Produto</th>
+                <th></th>
+                <th class="text-center">Preço</th>
+                <th class="text-center">Quantidade</th>
+                <th class="text-center">Total</th>
+                <th class="text-right"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                foreach (var item in Model.ProdutosPedidoViewModel)
+                {
+                    if (item.Produto != null)
+                    {
+                        <tr>
+                            <td class="details">
+                                <p>@item.Produto.Referencia</p>
+                                <ul class="color-option" style="display: grid;">
+                                    <li><span>Marca: @item.Produto.MarcaModel</span></li>
+                                    <li class="active" style="display: inline-flex;"><span>Cor: C @item.CI</span></li>
+                                </ul>
+                            </td>
+                            <td></td>
+                            <td style="font-size: 15px;" class="price text-center"><strong>@item.ValorUnitario</strong></td>
+                            <td class="qty text-center">@item.Quantidade</td>
+                            <td style="font-size: 15px;" class="total text-center"><strong class="primary-color">@item.ValorTotal</strong></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="details">
+                                <p>@item.Kits.Nome</p>
+                                <ul class="color-option" style="display: grid;">
+                                    <li><span>Marca: Diversas</span></li>
+                                    <li class="" style="display: inline-flex;"><span>Cor:</span><a style="margin-left: 10px;">N/A</a></li>
+                                </ul>
+                            </td>
+                            <td style="font-size: 15px;" class="price text-center"><strong>@item.ValorUnitario</strong></td>
+                            <td class="qty text-center">@item.Quantidade</td>
+                            <td style="font-size: 15px;" class="total text-center"><strong class="primary-color">@item.ValorTotal</strong></td>
+                        </tr>
+                    }
+
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
