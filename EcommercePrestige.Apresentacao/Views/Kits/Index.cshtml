@@ -1,0 +1,122 @@
+﻿@model EcommercePrestige.Application.ViewModel.KitsViewModel
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Kits</a></li>
+            <li class="active text-uppercase">@Model.Nome</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!--  Product Details -->
+            <div class="product product-details clearfix">
+                <div class="col-md-6">
+                    <div id="product-main-view">
+                        <div id="mainfoto" class="product-view">
+                            <img src="@Model.fotoPrincipal" alt="" style="max-height: 377px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+                    <div class="product-body">
+                        <div class="product-label">
+                            <span>KIT</span>
+                        </div>
+                        <h2 class="product-name text-uppercase"> Pedido pronto @Model.Nome</h2>
+                        @{
+                            if (Model.Logado)
+                            {
+                                <h3 class="product-price">R$ @Model.ValorVenda</h3>
+                            }
+                            else
+                            {
+                                <h5 class="product-price text-uppercase"><a asp-area="Identity" asp-page="/Account/Login">faça o login para ver o valor!</a></h5>
+                            }
+                        }
+                        
+                        <p><strong>Disponibilidade: </strong> @Model.StatusVenda</p>
+                        <p>
+                            @Model.Descricao
+                        </p>
+                        <form asp-controller="Carrinho" asp-action="Adicionar" method="post">
+                            <div class="product-options">
+
+                            </div>
+                            <div class="product-btns">
+                                <div class="qty-input">
+                                    <span class="text-uppercase">QTY: </span>
+                                    <input class="input" type="number" id="quantNumber" name="quantNumber" required>
+                                    <input class="hidden" id="kitId" name="kitId" value="@Model.Id" hidden required>
+                                </div>
+                                @{
+                                    if (Model.StatusVenda == "Indisponivel")
+                                    {
+                                        <button type="reset" disabled class="primary-btn add-to-cart disabled" style="background-color: lightgray; color: black;"><i class="fa fa-times-circle"></i> Indisponivel</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Adicionar ao carrinho</button>
+                                    }
+                                }
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="product-tab">
+                        <ul class="tab-nav">
+                            <li class="active"><a data-toggle="tab" href="#tab1">Produtos do Kit</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab1" class="tab-pane fade in active">
+                                @{
+                                    foreach (var produto in Model.Produtos)
+                                    {
+
+                                        <div class="col-md-2" style="display: inline-flex">
+                                            <img src="@produto.UriFoto" alt="" style="max-width: 65px;"><p style="align-self: flex-end; margin-left: 10px;"><a href="#foto" id="imgtbl" onclick="getFotos(@produto.Id)">@produto.Referencia</a></p>
+                                            <ul class="color-option" id="selType" name="selType" wfd-id="56" style="margin-left: 20px; align-self: center;">
+                                                <li id="imgvalue-@produto.Id" class="active" value="@produto.Id" wfd-id="58"><a style="background-image: url(@produto.ImgCor);" title="@produto.Descricao"></a></li>
+                                            </ul>
+                                            <div class="linha-vertical" style="margin-left: 20px;"></div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Product Details -->
+    </div>
+    <!-- /row -->
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    function getFotos(id1) {
+        var id = $("#imgvalue-"+id1).val();
+        $.ajax({
+            url: '@Url.Action("GetImgByProduct", "Kits")',
+            type: 'get',
+            data: {
+                id: id
+            }
+        }).done(function(response){
+            $("#mainfoto").html(response);
+            $('#product-main-view .product-view').zoom();
+        });
+    };
+</script>

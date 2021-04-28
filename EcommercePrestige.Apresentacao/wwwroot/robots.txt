@@ -1,0 +1,8 @@
+﻿User-agent: *
+Disallow: /Identity/Account/Login
+Disallow: /Suporte/Politicas
+Disallow: /Pedido/
+Disallow: /Suporte/Politicas
+Disallow: /Administracao/
+Disallow: /AdminProduto/
+Sitemap: https://prestigedobrasil.com.br/sitemap.xml

@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "EcommerceContext"
+    }
+  }
+
+  //"ConnectionStrings": {
+  //  "StorageAccount": "AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:20000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:20001/devstoreaccount1;TableEndpoint=http://127.0.0.1:20002/devstoreaccount1;",
+  //  "IdentityContextConnection": "Server=(localdb)\\mssqllocaldb;Database=EcommercePrestige.Apresentacao;Trusted_Connection=True;MultipleActiveResultSets=true",
+  //  "EcommerceContext": "Server=(localdb)\\mssqllocaldb;Database=EcommerceContext-7ff032b6-1a35-4a62-98da-09f719840a87;Trusted_Connection=True;MultipleActiveResultSets=true"
+  //}
+}

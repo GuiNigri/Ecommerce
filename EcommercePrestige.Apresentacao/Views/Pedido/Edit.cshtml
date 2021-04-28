@@ -1,0 +1,427 @@
+﻿@using EcommercePrestige.Application.Enums
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model EcommercePrestige.Application.ViewModel.PedidoAdmViewModel
+@{
+    Layout = "_LayoutAdm";
+
+}
+
+<div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-controller="Pedido" asp-action="ImpressaoADM" asp-route-pedido="@Model.Id" target="_blank"> Imprimir Pedido</a>
+    </div>
+</div>
+
+<form asp-controller="Pedido" asp-action="Edit" method="post">
+    <div class="card shadow mb-4">
+        <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Pedido</h6>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Id">Pedido</label>
+                    <input class="form-control" asp-for="Id" readonly />
+                    <input type="hidden" asp-for="Status" />
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label" asp-for="RazaoSocial">Razão Social</label>
+                    <input class="form-control" asp-for="RazaoSocial" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="DataPedido">Data Pedido</label>
+                    <input type="text" class="form-control" asp-for="DataPedido" readonly />
+                </div>
+            </div><br />
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="CNPJ">CNPJ</label>
+                    <input class="form-control" asp-for="CNPJ" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Usuario">Usuario</label>
+                    <input class="form-control" asp-for="Usuario" readonly />
+                    <input type="hidden" asp-for="UsuarioId" />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="NomeOtica">Otica</label>
+                    <input class="form-control" asp-for="NomeOtica" readonly />
+                </div>
+            </div><br />
+            <p><h5 class="text-uppercase">Status Pedido:  @Model.Status</h5></p>
+            @{
+                if (Model.Status == PedidosStatus.Efetuado)
+                {
+                    <p>Proximo Passo:</p>
+                    <div class="form-group row">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success" onclick="location.href = '@Url.Action("AprovarPedido","Pedido", new {idPedido = Model.Id, idUsuario = Model.UsuarioId})'"> Aprovar pedido</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger" onclick="location.href = '@Url.Action("ReprovarPedido","Pedido", new {idPedido = Model.Id, idUsuario = Model.UsuarioId})'"> Recusar Pedido</button>
+                        </div>
+                    </div>
+
+                }
+                else if (Model.Status == PedidosStatus.Confirmado)
+                {
+                    <p>Adicione o numero de rastreio para alterar o status do pedido, essa ação é feita automaticamente!</p>
+                    <div class="form-group row">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger" onclick="location.href = '@Url.Action("CancelarPedido","Pedido", new {idPedido = Model.Id, idUsuario = Model.UsuarioId})'"> Cancelar Pedido</button>
+                        </div>
+                    </div>
+
+                }
+                else if (Model.Status == PedidosStatus.Despachado)
+                {
+                    <p>Quando o pedido for entregue, o status será alterado para concluido.</p>
+
+                }
+                else if (Model.Status == PedidosStatus.Pronto)
+                {
+                    <p>O pedido está pronto para ser entregue, quando ocorrer a entrega indique nesta pagina.</p>
+
+                }
+                else if (Model.Status == PedidosStatus.Concluido)
+                {
+                    <p>Pedido concluido com sucesso!</p>
+
+                }
+                else if (Model.Status == PedidosStatus.Cancelado)
+                {
+                    <p>Esse pedido foi cancelado, consulte as observações!</p>
+
+                }
+                else if (Model.Status == PedidosStatus.Negado)
+                {
+                    <p>Esse pedido foi recusado, não permitindo ações!</p>
+
+                }
+            }
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Financeiro</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="FormaDePagamento">Forma de pagamento</label>
+                    <select class="form-control" asp-for="FormaDePagamento" asp-items="Model.FormaDePagamentoSelect"></select>
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label" asp-for="Parcelas">Parcelas</label>
+                    <input type="text" class="form-control" asp-for="Parcelas" />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Subtotal">Subtotal</label>
+                    <input type="text" class="form-control" asp-for="Subtotal" id="Subtotal" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Frete">Frete</label>
+                    <input type="text" class="form-control" asp-for="Frete" id="Frete" onkeyup="calcular()" />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Desconto">Desconto</label>
+                    <input type="text" class="form-control" asp-for="Desconto" id="Desconto" onkeyup="calcular()" />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="ValorTotal">Valor Total</label>
+                    <input type="text" class="form-control" asp-for="ValorTotal" id="ValorTotal" readonly />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label class="control-label" asp-for="Obs">Observações do pedido</label>
+                    <textarea class="form-control" asp-for="Obs"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Dados Transação</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="TransactionStatus">Status Transação</label>
+                    <input type="text" class="form-control" asp-for="TransactionStatus" readonly/>
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Tid">TID</label>
+                    <input type="text" class="form-control" asp-for="Tid" readonly/>
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="AuthorizationCode">Codigo de Autorização</label>
+                    <input type="text" class="form-control" asp-for="AuthorizationCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="Gateway">Gateway de Pagamento</label>
+                    <input type="text" class="form-control" asp-for="Gateway" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Dados - Entrega</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="control-label" asp-for="TipoDeEnvio">Tipo de envio</label>
+                    <select class="form-control" id="newTipoEnvio" name="newTipoEnvio" asp-for="TipoDeEnvio" asp-items="Model.TipoDeEnvioSelect"></select>
+                    <input type="hidden" asp-for="TipoDeEnvio" />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" for="newRastreio">Rastreio</label>
+                    <input type="hidden" asp-for="Rastreio" />
+                    @{
+
+                        if (Model.TipoDeEnvio == "proprio")
+                        {
+                            <input class="form-control" type="text" name="newRastreio" id="newRastreio" value="@Model.Rastreio" readonly />
+                        }
+                        else
+                        {
+                            <input class="form-control" type="text" name="newRastreio" id="newRastreio" value="@Model.Rastreio" />
+                        }
+                    }
+
+                </div>
+                @{
+                    if (Model.TipoDeEnvio == "proprio" && Model.Status == PedidosStatus.Pronto)
+                    {
+                        <div class="col-md-3" style="align-self: flex-end;">
+                            <a class="primary-btn" asp-controller="Pedido" asp-action="ConcluirPedido" asp-route-pedido="@Model.Id" asp-route-userId="@Model.UserId">Concluir Pedido</a>
+                        </div>
+                    }
+                }
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Endereço - Entrega</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Cep">CEP</label>
+                    <input type="text" class="form-control" asp-for="Cep" />
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label" asp-for="Rua">Rua</label>
+                    <input type="text" class="form-control" asp-for="Rua" />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Numero">Numero</label>
+                    <input type="text" class="form-control" asp-for="Numero" />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" asp-for="Complemento">Complemento</label>
+                    <input type="text" class="form-control" asp-for="Complemento" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label class="control-label" asp-for="Bairro">Bairro</label>
+                    <input type="text" class="form-control" asp-for="Bairro" />
+                </div>
+                <div class="col-md-4">
+                    <label class="control-label" asp-for="Cidade">Cidade</label>
+                    <input type="text" class="form-control" asp-for="Cidade" />
+                </div>
+                <div class="col-md-4">
+                    <label class="control-label" asp-for="Estado">Estado</label>
+                    <input type="text" class="form-control" asp-for="Estado" />
+                </div>
+            </div>
+            <div class="form-group">
+
+                @{
+                    if (Model.Status == PedidosStatus.Confirmado || Model.Status == PedidosStatus.Pronto)
+                    {
+                        <button class="btn btn-primary"> Salvar</button>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</form>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Produtos</h6>
+    </div>
+    <div class="card-body">
+        @{
+            if (Model.Status == PedidosStatus.Confirmado)
+            {
+
+
+                <form asp-controller="Pedido" asp-action="AdicionarItemAoPedido" method="post">
+                    <div class="form-group row">
+                        <input type="hidden" name="pedido" value="@Model.Id"/>
+                        <div class="col-md-3">
+                            <label class="control-label" for="referencias">Referencias</label>
+                            <select class="form-control" name="idProduto" id="referencias" asp-items="Model.Referencias"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label" for="cores">Cor</label>
+                            <select class="form-control" id="corId" name="corId" asp-items="Model.CoresSelect"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="control-label" for="quantidade">Quantidade</label>
+                            <input type="number" class="form-control" name="quantidade" id="quantidade"/>
+                        </div>
+                        <div class="col-md-4" style="align-self: flex-end;">
+                            <button type="submit" class="btn btn-primary float-right">Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        }
+        <table class="shopping-cart-table table">
+            <thead>
+            <tr>
+                <th>Produto</th>
+                <th></th>
+                <th class="text-center">Preço</th>
+                <th class="text-center">Quantidade</th>
+                <th class="text-center">Total</th>
+                <th class="text-right"></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in Model.ProdutosPedido)
+                    {
+                        if (item.Produto != null)
+                        {
+
+                            var ci = $"C{@item.CI}";
+                            
+         
+                            <tr>
+                                <td class="thumb"><img src="@item.Produto.UriFoto" alt="" style="width: 250px;"></td>
+                                <td class="details">
+                                    <a style="font-size: 14px;" asp-controller="Produtos" asp-action="Details" asp-route-id="@item.Produto.Id">@item.Produto.Referencia</a>
+                                    <ul class="color-option" style="display: grid;">
+                                        <li><span>Marca: @item.Produto.MarcaModel</span></li>
+                                        <li style="display: inline-flex;">
+                                            <span>Cor: @ci</span>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td style="font-size: 15px;" class="price text-center"><strong>@item.ValorUnitario</strong></td>
+                                <td class="qty text-center">
+                                    <form asp-controller="Pedido" asp-action="AtualizarQuantidade" method="post">
+                                        <input type="hidden" asp-for="@item.Id" name="idProduto" />
+                                        <input type="hidden" asp-for="@Model.Id" name="idEdit" />
+                                        <input type="hidden" asp-for="@Model.UsuarioId" name="idUsuario" />
+                                        <input class="input" id="quantNumber" name="quantNumber" type="number" value="@item.Quantidade">
+                                        @{
+                                            if (Model.Status == PedidosStatus.Confirmado)
+                                            {
+                                                <button class="button-update"><i class="fas fa-sync-alt" style="margin-left: 10px;"></i></button>
+                                            }
+                                        }
+
+                                    </form>
+                                </td>
+                                <td style="font-size: 15px;" class="total text-center"><strong class="primary-color">@item.ValorTotal</strong></td>
+                                <td>
+                                    @{
+                                        if (Model.Status == PedidosStatus.Confirmado)
+                                        {
+                                            <a asp-controller="Pedido" asp-action="RemoverItemDoPedido" asp-route-tipoOp="produto" asp-route-id="@item.Id"
+                                               asp-route-pedido="@Model.Id" class="main-btn icon-btn"><i class="fa fa-trash"></i></a>
+                                        }
+                                    }
+
+
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="thumb"><img src="https://img2.gratispng.com/20180625/iez/kisspng-aviator-sunglasses-computer-icons-5b3173bc8ad809.9682530515299675485687.jpg" alt=""></td>
+                                <td class="details">
+                                    <a style="font-size: 14px;" asp-controller="Kits" asp-action="Index" asp-route-id="@item.Kits.Id">Kit @item.Kits.Nome</a>
+                                    <ul class="color-option" style="display: grid;">
+                                        <li><span>Marca: Diversas</span></li>
+                                        <li class="" style="display: inline-flex;"><span>Cor:</span><a style="margin-left: 10px;">N/A</a></li>
+                                    </ul>
+                                </td>
+                                <td style="font-size: 15px;" class="price text-center"><strong>@item.ValorUnitario</strong></td>
+                                <td class="qty text-center">
+                                    <form asp-controller="Pedido" asp-action="AtualizarQuantidade" method="post">
+                                        <input type="hidden" asp-for="@item.Id" name="id" />
+                                        <input type="hidden" asp-for="@Model.Id" name="idEdit" />
+                                        <input type="hidden" asp-for="@Model.UsuarioId" name="idUusario" />
+                                        <input class="input" id="quantNumber" name="quantNumber" type="number" value="@item.Quantidade">
+                                        <button class="button-update"><i class="fas fa-sync-alt" style="margin-left: 10px;"></i></button>
+                                    </form>
+                                </td>
+                                <td style="font-size: 15px;" class="total text-center"><strong class="primary-color">@item.ValorTotal</strong></td>
+                                <td>
+                                    <a asp-controller="Pedido" asp-action="RemoverItemDoPedido" asp-route-tipoOp="kit" asp-route-id="@item.Id"
+                                       asp-route-pedido="@Model.Id" class="main-btn icon-btn"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="float-right" style="display: inline-flex;">
+            <p>
+                Paginas: @Html.PagedListPager(Model.ProdutosPedido, pagina => Url.Action("Edit", new {pagina, id = @Model.Id}), new PagedListRenderOptions() {UlElementClasses = new List<string> {"store-pages"}, DisplayLinkToNextPage = PagedListDisplayMode.Never, DisplayLinkToPreviousPage = PagedListDisplayMode.Never})
+            </p>
+
+        </div>
+        <div class="col-md-5">
+            <a asp-controller="Pedido" asp-action="EnviarAlteracaoEmail" asp-route-pedido="@Model.Id" class="btn btn-primary"> Enviar Alterações ao cliente</a>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    function calcular() {
+        var subTotal = parseFloat(document.getElementById("Subtotal").value.replace('.', '').replace(',','.'));
+        var frete = parseFloat(document.getElementById("Frete").value.replace('.', '').replace(',', '.'));
+        var desconto = parseFloat(document.getElementById("Desconto").value.replace('.', '').replace(',', '.'));
+
+        document.getElementById("ValorTotal").value = ((subTotal - desconto) + frete).toFixed(2).replace('.',',');
+
+    }
+
+    $("#referencias").change(function () {
+        var id = $(this).val();
+        $.ajax({
+            url: '@Url.Action("GetCorProduto", "Pedido")',
+            type: 'post',
+            data: {
+                idProduto: id
+            }
+        }).done(function(response){
+            $("#cores").html(response);
+        });
+    });
+
+
+</script>

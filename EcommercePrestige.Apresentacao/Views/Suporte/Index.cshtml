@@ -1,0 +1,41 @@
+﻿@model EcommercePrestige.Application.ViewModel.SuporteInputModel
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+            <div class="col-md-7" style="margin-top: 3px;">
+                <div class="section-title">
+                    <h3 class="title">Contato</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <iframe src='https://suporteprestigedobrasil.desk360.com.br/app/ticket/form?template=3' frameborder='0' width='100%' height='650px'>
+                </iframe>
+            </div>
+            <div class="col-md-4 col-md-offset-1">
+                <div class="section-title">
+                    <h4 class="title">Informações de contato</h4>
+                </div>
+
+                <div class="col-md-12">
+                    <label><i class="fa fa-phone"></i> (21) 2567-2725</label>
+                </div>
+                <div class="col-md-12">
+                    <label><i class="fa fa-whatsapp"></i> (21) 96635-6709</label>
+                </div>
+
+                <div class="section-title">
+                    <h4 class="title" style="margin-top: 15px;">Horarios de atendimento</h4>
+                </div>
+
+                <div class="col-md-12 col-lg-8">
+                    <label><i class="fa fa-clock-o"></i> Segunda a Sexta feira: 09:00 às 18:00</label>
+                    <label><i class="fa fa-clock-o"></i> Sabado: Fechado</label>
+                    <label><i class="fa fa-clock-o"></i> Domingos e feriados: Fechado</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

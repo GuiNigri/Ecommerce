@@ -1,0 +1,103 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoCreateEtapaFotoModel
+
+@{
+    Layout = "_LayoutAdm";
+}
+
+    <div class="card shadow mb-4">
+        <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Fotos</h6>
+        </div>
+        <div class="card-body">
+            <form asp-controller="AdminProduto" asp-action="AddFotoListaCreate" enctype="multipart/form-data">
+                <div class="form-group row input-group">
+                    <partial name="InputFotoPartialView" model="Model.Foto"/>
+                    <div class="col-md-2" style="align-self: flex-end;">
+                        <br />
+                        @if (Model.StatusAtivacao == "PE")
+                        {
+                            <button class="btn btn-success form-control"> Adicionar</button>
+                        }
+                        
+                    </div>
+                </div>
+            </form>
+            <hr />
+            <div class="table-responsive">
+                <table style="width: 50%" class="table table-bordered" id="dataTable" width: 100% cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Miniatura</th>
+                        <th class="text-center">Cor</th>
+                        <th class="text-center">Principal</th>
+                        @if (Model.StatusAtivacao == "PE")
+                        {
+                            <th></th>
+                        }
+                            
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        if (Model.Fotos.Any())
+                        {
+                            foreach (var item in Model.Fotos)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <img src="@item.Foto" alt="" style="max-width: 70px;" />
+                                    </td>
+                                    <td class="text-center">
+                                        <ul class="color-option">
+                                            <li class="active"><a style="background-image: url(@item.ImgCor);" title="@item.Descricao"></a></li>
+                                        </ul>
+                                    </td>
+                                    @if (@item.Principal)
+                                    {
+                                        <td class="text-center"><i class="fas fa-check-circle" style="color: green"></i></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"><i class="fas fa-times-circle" style="color: red"></i></td>
+                                    }
+
+                                    @if (Model.StatusAtivacao == "PE")
+                                    {
+                                        <td style="text-align: center"><button class="btn btn-danger" onclick="location.href = '@Url.Action("RemoverFotoListaCreate", "AdminProduto", new {idFoto = @item.Id, idProd = @Model.Foto.ProdutoId})'"><i class="fas fa-trash"></i></button></td>
+                                    }
+                                        
+                                </tr>
+
+                            }
+                        }
+
+                    }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @if (Model.StatusAtivacao == "PE")
+                    {
+                        <button class="btn btn-primary" onclick="location.href = '@Url.Action("SalvarEtapaFoto", "AdminProduto", new {idProd = Model.Foto.ProdutoId})'">Cadastrar Produto</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" onclick="location.href = '@Url.Action("Produtos", "AdminProduto")'">Lista de Produtos</button>
+                    }
+                </div>
+                <div class="col-md-3 offset-md-6">
+                    @if (Model.StatusAtivacao == "PE")
+                    {
+                        <p style="float: right;"><i class="fa fa-times-circle" style="color: red;"></i> Pendente</p>
+                    }
+                    else
+                    {
+                        <p style="float: right;"><i class="fa fa-check-circle" style="color: green;"></i> Ativo</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>

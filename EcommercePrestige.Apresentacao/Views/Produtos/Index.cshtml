@@ -1,0 +1,356 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model EcommercePrestige.Application.ViewModel.ProdutoIndexViewModel
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li class="active">Produtos</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container-fluid">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-2 col-lg-2">
+                <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Filtrando por:</h3>
+                    <ul class="filter-list">
+                        <li><span class="text-uppercase">cor:</span></li>
+                        <li class="active"><a style="background-image: url(@Model.Filtro.ImgCor); padding-left: 20px;"></a></li>
+                    </ul>
+
+                    <ul class="filter-list">
+                        <li><span class="text-uppercase">Marca:</span></li>
+                        <li><a style="padding-left: 5px;">@Model.Filtro.MarcaOption</a></li>
+                    </ul>
+                    <ul class="filter-list">
+                        <li><span class="text-uppercase">Material:</span></li>
+                        <li><a style="padding-left: 5px;">@Model.Filtro.MaterialOption</a></li>
+                    </ul>
+
+                    <ul class="filter-list">
+                        <li><span class="text-uppercase">Gênero:</span></li>
+                        <li><a style="padding-left: 4px;">@Model.Filtro.GeneroOption</a></li>
+                    </ul>
+                    @{
+                        if (Model.Filtro.CorOption <= 0 && Model.Filtro.GeneroOption == null && Model.Filtro.MarcaOption == null)
+                        {
+                            <button disabled class="primary-btn" onclick="location.href = '@Url.Action("RemoveFilter", "Produtos")'">Limpar</button>
+                        }
+                        else
+                        {
+                            <button class="primary-btn" onclick="location.href = '@Url.Action("RemoveFilter", "Produtos", new {category = Model.Filtro.Category})'">Limpar filtro</button>
+                        }
+                    }
+
+                </div>
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Cor <div class="pull-right"><a href="#" onclick="EscondeMenu('corFilter')"><i class="fa fa-plus"></i></a></div></h3>
+                    <ul class="color-option" id="corFilter" style="display: none;">
+                        @{
+                            foreach (var cor in Model.ListCor)
+                            {
+                                <li class="licoractive" value="@cor.CorId"><a href="#" style="background-image: url(@cor.ImgCor);border-radius: 74px;" title="@cor.DescricaoCor"></a></li>
+
+                            }
+                            <li class="licorclearactive" value=""><a href="#"><i class="fa fa-times" ></i></a></li>
+                        }
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Marca <div class="pull-right"><a href="#" onclick="EscondeMenu('marcaFilter')"><i class="fa fa-plus"></i></a></div></h3>
+                    <ul class="list-links" id="marcaFilter" style="display: none;">
+                        @{
+                            foreach (var marca in Model.ListMarca)
+                            {
+                                <li class="limarcaactive" value="@marca.Nome"><a href="#">@marca.Nome</a></li>
+
+                            }
+                            <li class="limarcaactive" value=""><a href="#">Todos</a></li>
+                        }
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Material <div class="pull-right"><a href="#" onclick="EscondeMenu('materialFilter')"><i class="fa fa-plus"></i></a></div></h3>
+                    <ul class="list-links" id="materialFilter" style="display: none;">
+                        @{
+                            foreach (var material in Model.ListMaterial)
+                            {
+                                <li class="limaterialactive" value="@material.Material"><a href="#">@material.Material</a></li>
+
+                            }
+                            <li class="limaterialactive" value=""><a href="#">Todos</a></li>
+                        }
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Gênero <div class="pull-right"><a href="#" onclick="EscondeMenu('generoFilter')"><i class="fa fa-plus"></i></a></div></h3>
+                    <ul class="list-links" id="generoFilter" style="display: none;">
+                        <li class="ligeneroactive" value="Masculino"><a href="#">Masculino</a></li>
+                        <li class="ligeneroactive" value="Feminino"><a href="#">Feminino</a></li>
+                        <li class="ligeneroactive" value=""><a href="#">Unissex</a></li>
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <div class="aside">
+                    <form asp-controller="Produtos" asp-action="FilterIndex" method="get">
+                        <input type="hidden" asp-for="Filtro.CorOption" id="corOption" name="corOption" />
+                        <input type="hidden" asp-for="Filtro.GeneroOption" id="generoOption" name="generoOption" />
+                        <input type="hidden" asp-for="Filtro.MarcaOption" id="marcaOption" name="marcaOption" />
+                        <input type="hidden" asp-for="Filtro.Category" id="categoryOption" name="category" />
+                        <input type="hidden" asp-for="Filtro.MaterialOption" id="materialOption" name="materialOption" />
+                        <input type="hidden" asp-for="Filtro.Termo" id="termoOption" name="termoOption" />
+
+                        <button type="submit" class="col-sm-12 primary-btn" style="margin-bottom: 20px;"> Filtrar</button>
+                    </form>
+                </div>
+                <!-- /aside widget -->
+            </div>
+            <!-- /ASIDE -->
+            <!-- MAIN -->
+            <div id="main" class="col-md-10 col-lg-10">
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="pull-left">
+                        <form asp-controller="Produtos" asp-action="FilterIndex" method="get">
+                            <div class="sort-filter">
+                                <span class="text-uppercase">Ordenar Por:</span>
+                                <select class="input" asp-for="Filtro.OrderType" id="orderType" name="orderType">
+                                    <option value="alphabetical">Ordem Alfabética</option>
+                                    <option value="new">Lançamentos</option>
+                                    <option value="lowPrice">Menor preço</option>
+                                    <option value="highPrice">Maior preço</option>
+                                </select>
+                                <input type="hidden" asp-for="Filtro.CorOption" id="corOrder" name="corOption" />
+                                <input type="hidden" asp-for="Filtro.GeneroOption" id="generoOrder" name="generoOption" />
+                                <input type="hidden" asp-for="Filtro.MarcaOption" id="marcaOrder" name="marcaOption" />
+                                <input type="hidden" asp-for="Filtro.Category" id="categoryOrder" name="category" />
+                                <input type="hidden" asp-for="Filtro.MaterialOption" id="materialOrder" name="materialOption" />
+                                <input type="hidden" asp-for="Filtro.Termo" id="termoOrder" name="termoOption" />
+                                <button type="submit" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="pull-right" style="display: inline-flex;">
+                        <p>
+                            Paginas: @Html.PagedListPager(
+                                         Model.ListProdutos,
+                                         pagina => Url.Action("Page",
+                                             new
+                                             {
+                                                 pagina,
+                                                 corOrder = Model.Filtro.CorOption,
+                                                 generoOrder = Model.Filtro.GeneroOption,
+                                                 marcaOrder = Model.Filtro.MarcaOption,
+                                                 orderType = Model.Filtro.OrderType,
+                                                 category = Model.Filtro.Category,
+                                                 materialOrder = Model.Filtro.MaterialOption,
+                                                 termoOrder = Model.Filtro.Termo
+                                             }
+                                             ),
+                                         new PagedListRenderOptions()
+                                         {
+                                             UlElementClasses = new List<string> { "store-pages" },
+
+                                             DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded,
+                                             DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded,
+                                             LinkToPreviousPageFormat = "Anterior",
+                                             LinkToNextPageFormat = "Próximo"
+
+                                         })
+                        </p>
+
+                    </div>
+                </div>
+                <!-- /store top filter -->
+                <!-- STORE -->
+                <div id="store">
+                    <!-- row -->
+                    <div class="row">
+                        <!-- Product Single -->
+                        @{
+                            foreach (var produto in Model.ListProdutos)
+                            {
+
+                                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6"  id="produto-tab">
+                                    @await Component.InvokeAsync("Produto", new { produtoViewModel = produto, exibirPreco = true })
+                                </div>
+
+                            }
+                        }
+
+                        <!-- /Product Single -->
+                    </div>
+                    <!-- /row -->
+                </div>
+                <!-- /STORE -->
+                <!-- store bottom filter -->
+                <div class="store-filter clearfix">
+                    <div class="pull-right" style="display: inline-flex;">
+                        <p>
+                            Paginas: @Html.PagedListPager(
+                                         Model.ListProdutos,
+                                         pagina => Url.Action("Page",
+                                             new
+                                             {
+                                                 pagina,
+                                                 corOrder = Model.Filtro.CorOption,
+                                                 generoOrder = Model.Filtro.GeneroOption,
+                                                 marcaOrder = Model.Filtro.MarcaOption,
+                                                 orderType = Model.Filtro.OrderType,
+                                                category = Model.Filtro.Category,
+                                                 materialOrder = Model.Filtro.MaterialOption,
+                                                 termoOrder = Model.Filtro.Termo
+                                             }
+                                             ),
+                                         new PagedListRenderOptions()
+                                         {
+                                             UlElementClasses = new List<string> { "store-pages" },
+
+                                             DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded,
+                                             DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded,
+                                             LinkToPreviousPageFormat = "Anterior",
+                                             LinkToNextPageFormat = "Próximo"
+
+                                         })
+                        </p>
+
+                    </div>
+                </div>
+                <!-- /store bottom filter -->
+            </div>
+            <!-- /MAIN -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    $(".liactive").click(
+        function (event) {
+            event.preventDefault();
+        }
+    );
+    $(".limaterialactive").click(
+        function (event) {
+            $('.limaterialactive').removeClass('active');
+            $('.limaterialactive').css("font-weight", "normal");
+            $(this).addClass('active');
+            $(this).css("font-weight", "bold");
+            event.preventDefault();
+        }
+    );
+
+
+    $("#materialFilter li").click(function () {
+        $("#materialOption").val($(this).attr("value"));
+    });
+
+    $(".licoractive").click(
+        function (event) {
+            $('.licoractive').removeClass('active');
+            $(this).addClass('active');
+            event.preventDefault();
+        }
+    );
+
+    $(".licorclearactive").click(
+        function (event) {
+            $('.licoractive').removeClass('active');
+            event.preventDefault();
+        }
+    );
+
+
+    $("#corFilter li").click(function () {
+        $("#corOption").val($(this).attr("value"));
+    });
+
+    $(".limarcaactive").click(
+        function (event) {
+            $('.limarcaactive').removeClass('active');
+            $('.limarcaactive').css("font-weight", "normal");
+            $(this).addClass('active');
+            $(this).css("font-weight", "bold" );
+            event.preventDefault();
+        }
+    );
+
+    $("#marcaFilter li").click(function () {
+        $("#marcaOption").val($(this).attr("value"));
+    });
+
+    $(".ligeneroactive").click(
+        function (event) {
+            $('.ligeneroactive').removeClass('active');
+            $('.ligeneroactive').css("font-weight", "normal");
+            $(this).addClass('active');
+            $(this).css("font-weight", "bold");
+            event.preventDefault();
+        }
+    );
+
+    $("#generoFilter li").click(function () {
+        $("#generoOption").val($(this).attr("value"));
+    });
+
+    $(document).ready(function () {
+
+        var url = window.location.search.replace("?", "");
+        var item = url.split("&");
+
+        var order = item[0].toString().split("=");
+
+        $('#orderType').find('[value="' + order[1] + '"]').attr('selected', true);
+
+    });
+
+    function getFotos(id, idProduto) {
+        $.ajax({
+            url: '@Url.Action("GetFotoByCorIndex", "Produtos")',
+            type: 'get',
+            data: {
+                produtoId: id
+            }
+        }).done(function (response) {
+
+            $("#MainFoto"+idProduto).html(response);
+            $("#idCorDetails"+idProduto).val(id).attr("value");
+        });
+    };
+
+    function EscondeMenu(id) {
+
+        var elemento = document.getElementById(id);
+
+        if (elemento.style.display === 'none') {
+            elemento.style.display = 'block';
+        }
+        else {
+            elemento.style.display = 'none';
+        }
+
+        event.preventDefault();
+
+    }
+</script>

@@ -1,0 +1,12 @@
+﻿@model EcommercePrestige.Application.ViewModel.TextoHomeViewModel
+
+
+@{
+    foreach (var texto in Model.Textos)
+    {
+        <div class="top-header-slick" style="text-align: center">
+            <span style="font-size: 16px;">@texto.Texto</span>
+        </div>
+    }
+}
+

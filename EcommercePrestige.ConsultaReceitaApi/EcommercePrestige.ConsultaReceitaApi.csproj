@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EcommercePrestige.Negocio\EcommercePrestige.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CookieAwareWebClient.cs" />
+  </ItemGroup>
+
+</Project>

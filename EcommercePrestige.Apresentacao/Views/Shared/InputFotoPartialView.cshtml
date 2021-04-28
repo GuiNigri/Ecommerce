@@ -1,0 +1,16 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoFotoInputModel
+
+<input type="hidden" asp-for="ProdutoId" />
+<div class="col-md-3">
+    <label class="control-label"> Cor</label>
+    <select class="form-control" asp-for="CorId" asp-items="Model.SelectCor">
+    </select>
+</div>
+<div class="col-md-5">
+    <label class="control-label" for="foto"> Foto</label>
+    <input type="file" class="custom-file" id="foto" name="foto" placeholder="Upload Imagem">
+</div>
+<div class="col-md-2" style="align-self: flex-end;">
+    <input type="checkbox" asp-for="Principal" data-val="true" and value="true" />
+    <label class="control-label" asp-for="Principal"> Principal</label>
+</div>

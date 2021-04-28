@@ -1,0 +1,25 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2 alert alert-success control-label">
+                    <h5 class="text-uppercase text-center">Cadastro efetuado com sucesso. Enviamos um link de confirmação para o e-mail cadastrado.</h5>
+                    <h6 class="text-uppercase text-center">CASO NÃO ENCONTRE O EMAIL CONFIRA TAMBEM NA SEÇÃO DE SPAM OU LIXEIRA.</h6>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3 col-md-offset-5">
+                    <a class="primary-btn" asp-area="Identity" asp-page="/Account/Login">Ir para o login</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

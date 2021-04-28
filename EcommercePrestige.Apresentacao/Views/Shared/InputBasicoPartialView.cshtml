@@ -1,0 +1,52 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoCreateEtapaBasicaModel
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="control-label" asp-for="Referencia">Referencia</label>
+        <input type="text" class="form-control" asp-for="Referencia" />
+    </div>
+    <div class="col-md-2">
+        <label class="control-label" asp-for="MarcaModelId">Marca</label>
+        <select type="text" class="form-control" asp-for="MarcaModelId" asp-items="Model.SelectMarca"></select>
+    </div>
+    <div class="col-md-2">
+        <label class="control-label" asp-for="MaterialModelId">Material</label>
+        <select type="text" class="form-control" asp-for="MaterialModelId" asp-items="Model.SelectMaterial"></select>
+    </div>
+    <div class="col-md-2">
+        <label class="control-label" asp-for="Genero">Genero</label>
+        <select type="text" class="form-control" asp-for="Genero" asp-items="Model.SelectGenero"></select>
+    </div>
+    <div class="col-md-2">
+        <label class="control-label" asp-for="StatusProduto">Tipo</label>
+        <select type="text" class="form-control" asp-for="StatusProduto" asp-items="Model.SelectStatus"></select>
+    </div>
+    <div class="col-md-2">
+        <label class="control-label" asp-for="Tamanho">Tamanho</label>
+        <input type="text" class="form-control" asp-for="Tamanho" />
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="control-label" asp-for="ValorVenda">Valor</label>
+        <input type="text" class="form-control" asp-for="ValorVenda" />
+    </div>
+    <div class="col-md-10">
+        <label class="control-label" asp-for="Descricao">Descrição</label>
+        <textarea class="form-control" name="descricao" asp-for="Descricao"></textarea>
+    </div>
+</div>
+<p>Selecione as categorias desejadas:</p>
+<div class="form-group row">
+    <div class="col-md-2">
+        <input type="checkbox" name="bestSeller" asp-for="BestSeller" data-val="true" and value="true" />
+        <label class="control-label">Best Seller</label>
+    </div>
+    <div class="col-md-2">
+        <input type="checkbox" name="liquidacao" asp-for="Liquidacao" data-val="true" and value="true" />
+        <label class="control-label">Liquidação</label>
+    </div>
+    <div class="col-md-2">
+        <input type="checkbox" name="vitrine" asp-for="Vitrine" data-val="true" and value="true" />
+        <label class="control-label">Vitrine</label>
+    </div>
+</div>

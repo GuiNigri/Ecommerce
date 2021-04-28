@@ -1,0 +1,209 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoEditViewModel
+@{
+    Layout = "_LayoutAdm";
+}
+<div class="row">
+    <div class="col-md-3 offset-md-9">
+        @if (Model.Basico.StatusAtivacao == "PE")
+        {
+            <p style="float: right;">Status do produto: <i class="fa fa-info-circle" style="color: orangered;"></i> Pendente</p>
+        }
+        else if (Model.Basico.StatusAtivacao == "AT")
+        {
+            <p style="float: right;">Status do produto: <i class="fa fa-check-circle" style="color: green;"></i> Ativo</p>
+        }
+        else
+        {
+            <p style="float: right;">Status do produto: <i class="fa fa-times-circle" style="color: red;"></i> Inativo</p>
+        }
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Informações Basicas</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="AdminProduto" asp-action="UpdateProduto" method="post">
+            <input type="hidden" asp-for="IdProd" />
+            <input type="hidden" asp-for="Basico.StatusAtivacao" />
+            <input type="hidden" asp-for="Basico.Referencia" value="@Model.Basico.Referencia" />
+            <partial name="InputBasicoPartialView" model="@Model.Basico"/>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <button class="btn btn-primary"> Salvar Alteração</button>
+                </div>
+                <div class="col-md-4 offset-4">
+                    @if (Model.Basico.StatusAtivacao == "AT")
+                    {
+                        <button type="button" class="btn btn-danger" style="float: right;" onclick="location.href = '@Url.Action("AlterarStatusAtivacaoProduto", "AdminProduto", new {idProduto = @Model.IdProd})'">Inativar</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-success" style="float: right;" onclick="location.href = '@Url.Action("AlterarStatusAtivacaoProduto", "AdminProduto", new {idProduto = @Model.IdProd})'">Ativar</button>
+                    }
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Cores & Estoque</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="AdminProduto" asp-action="AddCorListaEdit" method="get">
+            <partial name="InputCorPartialView" model="@Model.EtapaCor.Cor"/>
+        </form>
+        <hr />
+        <div class="table-responsive">
+            <table style="width: 50%" class="table table-bordered" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="text-center">CI</th>
+                        <th class="text-center">Cor</th>
+                        <th class="text-center">Estoque</th>
+                        <th class="text-center">Gold</th>
+                        <th class="text-center">Silver</th>
+                        <th class="text-center">Basic</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (Model.EtapaCor.Cores.Any())
+                        {
+                            foreach (var item in Model.EtapaCor.Cores)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @item.CodigoInterno
+                                    </td>
+                                    <td class="text-center">
+                                        <ul class="color-option">
+                                            <li class="active"><a style="background-image: url(@item.ImgCor)" title="@item.DescricaoCor"></a></li>
+                                        </ul>
+                                    </td>
+                                    <td class="qty text-center">
+                                        <form style="display: inline-flex;" asp-controller="AdminProduto" asp-action="AlterarEstoque">
+                                            <input type="hidden" name="id" value="@item.Id">
+                                            <input type="hidden" name="idProduto" value="@Model.IdProd">
+                                            <input class="input text-center" id="quantNumber" name="quantNumber" type="number" value="@item.Estoque">
+                                            <button class="button-update"><i class="fas fa-sync-alt" style="margin-left: 10px;"></i></button>
+                                        </form>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" asp-for="@item.Gold" id="gold" data-val="true" and value="true" onchange="alterarKit(@item.Id, 'gold')"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" asp-for="@item.Silver" id="silver" data-val="true" and value="true" onchange="alterarKit(@item.Id, 'silver')"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" asp-for="@item.Basic" id="basic" data-val="true" and value="true" onchange="alterarKit(@item.Id, 'basic')"/>
+                                    </td>
+                                    @if (item.StatusAtivacao == "AT")
+                                    {
+                                        <td class="text-center" style="text-align: center"><button class="btn btn-danger" onclick="location.href = '@Url.Action("AlterarStatusAtivacaoCor", "AdminProduto", new {idCor = @item.Id, idProd = @Model.IdProd})'">Inativar</button></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center" style="text-align: center"><button class="btn btn-success" onclick="location.href = '@Url.Action("AlterarStatusAtivacaoCor", "AdminProduto", new {idCor = @item.Id, idProd = @Model.IdProd})'">Ativar</button></td>
+                                    }
+
+                                </tr>
+
+                            }
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Fotos</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="AdminProduto" asp-action="AddFotoListaEdit" enctype="multipart/form-data">
+            <div class="form-group row input-group">
+                <partial name="InputFotoPartialView" model="Model.EtapaFoto.Foto"/>
+                <div class="col-md-2" style="align-self: flex-end;">
+                    <br />
+                    <button class="btn btn-success form-control"> Adicionar</button>
+                </div>
+            </div>
+        </form>
+        <hr />
+        <div class="table-responsive">
+            <table style="width: 50%" class="table table-bordered" id="dataTable" width: 100% cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="text-center">Miniatura</th>
+                        <th class="text-center">Cor</th>
+                        <th class="text-center">Principal</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (Model.EtapaFoto.Fotos.Any())
+                        {
+                            foreach (var item in Model.EtapaFoto.Fotos)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <img src="@item.Foto" alt="" style="max-width: 70px;" />
+                                    </td>
+                                    <td class="text-center">
+                                        <ul class="color-option">
+                                            <li class="active"><a style="background-image: url(@item.ImgCor);" title="@item.Descricao"></a></li>
+                                        </ul>
+                                    </td>
+                                    @if (@item.Principal)
+                                    {
+                                        <td class="text-center"><i class="fas fa-check-circle" style="color: green"></i></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"><i class="fas fa-times-circle" style="color: red"></i></td>
+                                    }
+
+                                    <td style="text-align: center"><button class="btn btn-danger" onclick="location.href = '@Url.Action("RemoverFotoListaEdit", "AdminProduto", new {idFoto = @item.Id, idProd = @Model.IdProd})'"><i class="fas fa-trash"></i></button></td>
+
+
+                                </tr>
+
+                            }
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    function alterarKit(idCor, kitName) {
+        $.ajax({
+            url: '@Url.Action("AlterarKitDoProduto", "AdminProduto")',
+            type: 'get',
+            data: {
+                kit: kitName,
+                idCor: idCor
+            }
+        });
+    }
+
+</script>

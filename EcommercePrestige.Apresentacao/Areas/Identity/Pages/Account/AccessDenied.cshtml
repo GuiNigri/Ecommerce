@@ -1,0 +1,23 @@
+﻿@page
+@model AccessDeniedModel
+@{
+    ViewData["Title"] = "Access denied";
+}
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2 alert alert-danger control-label">
+                    <h5 class="text-uppercase text-center">Acesso negado</h5>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3 col-md-offset-5">
+                    <a class="primary-btn" asp-controller="Home" asp-action="Index">Retornar à página principal</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
