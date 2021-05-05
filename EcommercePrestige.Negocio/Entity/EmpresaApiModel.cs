@@ -6,19 +6,19 @@ namespace EcommercePrestige.Model.Entity
 {
     public class EmpresaApiModel
     {
-        public string Status { get; private set; }
-        public string Message { get; private set; }
-        public string Cnpj { get; private set; }
-        public string Nome { get; private set; }
-        public IEnumerable<CnaeModel> Atividade_principal { get; private set; }
-        public string Logradouro { get; private set; }
-        public string Numero { get; private set; }
-        public string Complemento { get; private set; }
-        public string Cep { get; private set; }
-        public string Bairro { get; private set; }
-        public string Municipio { get; private set; }
-        public string Uf { get; private set; }
-        public string Telefone { get; private set; }
+        public string Status { get; set; }
+        public string Message { get; set; }
+        public string Cnpj { get; set; }
+        public string Nome { get; set; }
+        public IEnumerable<CnaeModel> Atividade_principal { get; set; }
+        public string Logradouro { get; set; }
+        public string Numero { get; set; }
+        public string Complemento { get; set; }
+        public string Cep { get; set; }
+        public string Bairro { get; set; }
+        public string Municipio { get; set; }
+        public string Uf { get; set; }
+        public string Telefone { get; set; }
 
         public void setTelefone(string telefone)
         {
@@ -38,6 +38,6 @@ namespace EcommercePrestige.Model.Entity
 
     public class CnaeModel
     {
-        public string Code { get; private set; }
+        public string Code { get; set; }
     }
 }
