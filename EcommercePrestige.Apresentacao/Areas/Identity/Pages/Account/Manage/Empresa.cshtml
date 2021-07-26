@@ -1,0 +1,81 @@
+﻿@page
+@model EmpresaModel
+@{
+    ViewData["ActivePage"] = ManageNavPages.Empresa;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Gerenciamento de empresa</h4>
+        </div>
+        <p>* Para alterar as informações da empresa abra uma solicitação no Fale Conosco.</p>
+        <form id="empresa-form" method="post">
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label asp-for="Input.Cnpj" class="control-label"></label>
+                    <input asp-for="Input.Cnpj" class="form-control input" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.Cnae" class="control-label"></label>
+                    <input asp-for="Input.Cnae" class="form-control input" readonly/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label asp-for="Input.RazaoSocial" class="control-label"></label>
+                    <input asp-for="Input.RazaoSocial" class="form-control input" readonly/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label asp-for="Input.NomeOtica" class="control-label"></label>
+                    <input asp-for="Input.NomeOtica" class="form-control input" readonly/>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.Telefone" class="control-label"></label>
+                    <input asp-for="Input.Telefone" class="form-control input" readonly/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label asp-for="Input.Cep" class="control-label"></label>
+                    <input asp-for="Input.Cep" class="form-control input" readonly/>
+                </div>
+                <div class="col-md-9">
+                    <label asp-for="Input.Logradouro" class="control-label"></label>
+                    <input asp-for="Input.Logradouro" class="form-control input" readonly/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label asp-for="Input.Numero" class="control-label"></label>
+                    <input asp-for="Input.Numero" class="form-control input" readonly/>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Input.Complemento" class="control-label"></label>
+                    <input asp-for="Input.Complemento" class="form-control input" readonly/>
+                </div>
+                <div class="col-md-5">
+                    <label asp-for="Input.Bairro" class="control-label"></label>
+                    <input asp-for="Input.Bairro" class="form-control input" readonly/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-9">
+                    <label asp-for="Input.Municipio" class="control-label"></label>
+                    <input asp-for="Input.Municipio" class="form-control input" readonly/>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Input.Uf" class="control-label"></label>
+                    <input asp-for="Input.Uf" class="form-control input" readonly/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

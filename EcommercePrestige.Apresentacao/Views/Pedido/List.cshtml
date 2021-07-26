@@ -1,0 +1,137 @@
+﻿@using X.PagedList.Mvc.Core
+@using EcommercePrestige.Application.Enums
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model EcommercePrestige.Application.ViewModel.PedidoListAdminViewModel
+
+@{
+    Layout = "_LayoutAdm";
+}
+
+<div class="row">
+    <div class="col-md-5 col-xs-3" style="margin-bottom: 10px;">
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" asp-controller="Pedido" asp-action="List" method="get">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-1 small" placeholder="Pesquisar" aria-label="Search" aria-describedby="basic-addon2" name="termo">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-search fa-fw"></i>
+                </a>
+                <!-- Dropdown - Messages -->
+                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                    <form class="form-inline mr-auto w-100 navbar-search" asp-controller="Pedido" asp-action="List" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Pesquisar" aria-label="Search" aria-describedby="basic-addon2" name="termo">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-2 offset-md-5" style="margin-bottom: 10px;">
+        <button style="float: right;" class="btn btn-primary" onclick="location.href = '@Url.Action("VerificarPedidoConcluido", "Pedido")'">Verificar Concluidos</button>
+    </div>
+</div>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Pedidos</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-uppercase" id="dataTable" width="100%" cellspacing="0" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Cliente</th>
+                        <th>Valor</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        foreach (var item in Model.ListPedidos)
+                        {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.RazaoSocial</td>
+                                            <td>R$ @item.ValorTotal</td>
+                                            <td>@item.DataPedido</td>
+                                            @{
+                                                if (item.Status == PedidosStatus.Cancelado || item.Status == PedidosStatus.Negado)
+                                                {
+                                                    <td>@item.Status <i class="fa fa-dot-circle" style="color: red"></i></td>
+                                                }
+                                                else if (item.Status == PedidosStatus.Efetuado)
+                                                {
+                                                    <td>@item.Status <i class="fa fa-dot-circle" style="color: yellow"></i></td>
+                                                }
+                                                else if(item.Status == PedidosStatus.Confirmado)
+                                                {
+                                                    <td>@item.Status <i class="fa fa-dot-circle" style="color: blue"></i></td>
+                                                }
+                                                else if(item.Status == PedidosStatus.Concluido)
+                                                {
+                                                    <td>@item.Status <i class="fa fa-dot-circle" style="color: green"></i></td>
+                                                }
+                                                else if(item.Status == PedidosStatus.Despachado)
+                                                {
+                                                    <td>@item.Status <i class="fa fa-dot-circle" style="color: orangered"></i></td>
+                                                }
+                                                else if(item.Status == PedidosStatus.Pronto)
+                                                {
+                                                    <td>@item.Status <i class="fa fa-dot-circle" style="color: orangered"></i></td>
+                                                }
+                                            }
+
+                                            <td><button class="btn btn-primary" onclick="location.href = '@Url.Action("Edit","Pedido", new{id = @item.Id})'"> Editar</button></td>
+                                        </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="float-right" style="display: inline-flex;">
+    <p>
+        Paginas: @Html.PagedListPager(
+Model.ListPedidos,
+pagina => Url.Action("List",
+new
+{
+pagina,
+termo = Model.Termo
+}
+),
+new PagedListRenderOptions()
+{
+UlElementClasses = new List<string> { "store-pages" },
+
+DisplayLinkToNextPage = PagedListDisplayMode.Never,
+DisplayLinkToPreviousPage = PagedListDisplayMode.Never
+
+})
+    </p>
+
+</div>

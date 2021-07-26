@@ -1,0 +1,87 @@
+﻿@model EcommercePrestige.Application.ViewModel.ProdutoCreateEtapaCorModel
+
+@{
+    Layout = "_LayoutAdm";
+}
+
+    <div class="card shadow mb-4">
+        <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Cores & Estoque</h6>
+        </div>
+        <div class="card-body">
+            <form asp-controller="AdminProduto" asp-action="AddCorListaCreate" method="get">
+                <partial name="InputCorPartialView" model="@Model.Cor"/>
+            </form>
+            <div class="table-responsive">
+                <table style="width: 50%" class="table table-bordered" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Codigo Interno</th>
+                            <th class="text-center">Cor</th>
+                            <th class="text-center">Estoque</th>
+                            <th class="text-center">Gold</th>
+                            <th class="text-center">Silver</th>
+                            <th class="text-center">Basic</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (Model.Cores.Any())
+                            {
+                                foreach (var item in Model.Cores)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            @item.CodigoInterno
+                                        </td>
+                                        <td class="text-center">
+                                            <ul class="color-option">
+                                                <li class="active"><a style="background-image: url(@item.ImgCor);" title="@item.DescricaoCor"></a></li>
+                                            </ul>
+                                        </td>
+                                        <td class="text-center">@item.Estoque</td>
+                                        @if (item.Gold)
+                                        {
+                                            <td class="text-center"><i class="fas fa-check-circle" style="color: green"></i></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"><i class="fas fa-times-circle" style="color: red"></i></td>
+                                        }
+
+                                        @if (item.Silver)
+                                        {
+                                            <td class="text-center"><i class="fas fa-check-circle" style="color: green"></i></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"><i class="fas fa-times-circle" style="color: red"></i></td>
+                                        }
+                                        @if (item.Basic)
+                                        {
+                                            <td class="text-center"><i class="fas fa-check-circle" style="color: green"></i></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"><i class="fas fa-times-circle" style="color: red"></i></td>
+                                        }
+                                        <td class="text-center" style="text-align: center"><button class="btn btn-danger" onclick="location.href = '@Url.Action("RemoverCorListaCreate", "AdminProduto", new {idCor = @item.Id, idProd = @Model.Cor.ProdutoId})'"><i class="fas fa-trash"></i></button></td>
+                                    </tr>
+
+                                }
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-primary" onclick="location.href = '@Url.Action("SalvarEtapaCor", "AdminProduto", new {idProd = Model.Cor.ProdutoId})'">Proxima Etapa</button>
+                </div>
+            </div>
+        </div>
+    </div>

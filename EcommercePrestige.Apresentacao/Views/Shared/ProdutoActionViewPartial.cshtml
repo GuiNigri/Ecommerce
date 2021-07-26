@@ -1,0 +1,24 @@
+﻿@model (bool,string, int)
+
+@{
+    if (Model.Item1)
+    {
+        <div class="qty-input">
+            <div class="form-group">
+                <span style="font-size: 14px;">Quant: </span>
+                <input class="input" type="number" id="quantNumber" name="quantNumber" required>
+            </div>
+        </div>
+        <input type="hidden" name="returnUrl" value="@Model.Item2" />
+        <button type="submit" class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> carrinho</button>
+    }
+    else
+    {
+        <div class='form-group'>
+           <label for='emailesgotado' class='control-label' style='margin-bottom: 15px; width: 100%; text-align: center;'> PRODUTO SEM ESTOQUE</label>
+           <input type='email' name='emailesgotado' id='emailesgotado' class='input form-group' placeholder='DIGITE SEU EMAIL' style='text-align: center;'/>
+           <button type='button' class='primary-btn' style='width: 100%;' id='btnAviseMe' onclick='AviseMe(@Model.Item3)'> AVISE-ME</button>
+        </div>
+
+    }
+}

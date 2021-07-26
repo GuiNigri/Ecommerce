@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-189021697-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-189021697-1');
+    </script>
+    <script src="https://assets.pagar.me/checkout/1.1.0/checkout.js"></script>
+
+    <meta name="keywords" content="óticas, óculos, ótica, armação, prestige, brasil, people, azzaro, prestige do brasil, revenda">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-language" content="pt-br">
+
+    <meta name="norton-safeweb-site-verification" content="ahdgegz821dikuuuyh7i8eg6bsphnogw11hy2eq1syeyysli1mtomxgcryy36zuyihwp7750hm7qqawj4dueg7n-0ntuclr7ii6h7w273tox1f-2g37fxxopsojhm5tg" />
+
+    <meta name="description" content="Encontre as melhores armações para sua ótica, como AZZARO, PRESTIGE E PEOPLE, marcas consolidadas no mercado, aumente suas vendas com nosso portfólio!" />
+
+    <title>Prestige do Brasil</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet">
+
+
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="/css/nouislider.min.css" />
+
+    <!-- Font Awesome Icon -->
+    <link type="text/css" rel="stylesheet" href="/css/font-awesome.min.css" />
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="/css/style.css" asp-append-version="true" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<header>
+    <!-- top Header -->
+    <div id="top-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-8" style="text-align: -webkit-center;">
+                        <div id="top-header-slick">
+                            @await Component.InvokeAsync("TextosTopHome")
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="header-btns pull-right" style="margin-top: 3px;">
+                            <li>
+                                <a href="#" onclick="showSearch()"><i class="fa fa-search"></i></a>
+                            </li>
+                            <!-- Account -->
+                            <li class="header-account dropdown default-dropdown">
+                                @await Component.InvokeAsync("Login")
+                            </li>
+                            <!-- /Account -->
+                            <!-- Cart -->
+                            <li class="header-cart dropdown default-dropdown" style="display: -webkit-inline-box; margin-left: 15px;">
+                                @await Component.InvokeAsync("Carrinho")
+                            </li>
+                            <!-- /Cart -->
+                            <!-- Mobile nav toggle-->
+                            <!-- / Mobile nav toggle -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /top Header -->
+    <!-- header -->
+    <div class="header-search" style="display: none;" id="hd-search">
+        <form asp-controller="Produtos" asp-action="FilterIndex" method="get" name="formSearch">
+            <input class="input-search search-input" type="text" placeholder="Busca" name="termoOption" required>
+            <button class="search-btn"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div id="header">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <li class="nav-toggle">
+                        <button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-bars"></i></button>
+                    </li>
+                    <div class="col-md-2 col-lg-1" style="text-align-last: center;">
+                        <!-- Logo -->
+                        <div class="header-logo ">
+                            <a class="logo" asp-controller="Home" asp-action="Index">
+                                <img src="/img/principal.jpeg" alt="">
+                            </a>
+                        </div>
+                        <!-- /Logo -->
+                    </div>
+                    <div class="col-md-10">
+                        <div id="navigation" style="background-color: white;">
+                            <div id="responsive-nav">
+                                @await Component.InvokeAsync("Menu")
+                                <!-- menu nav -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- header -->
+
+    </div>
+    <div id="bottom-header">
+        <div class="container-fluid">
+            <div class="col-md-4" style="text-align: center; padding: 3px 0px;">
+                <span style="font-size: 17px;"><i class="fa fa-truck"></i> O estoque é próprio, a entrega imediata!</span>
+            </div>
+            <div class="col-md-4" style="text-align: center; padding: 3px 0px;">
+                <span style="font-size: 17px;"><i class="fa fa-shield"></i> Site Seguro</span>
+            </div>
+            <div class="col-md-4" style="text-align: center; padding: 3px 0px;">
+                <span style="font-size: 17px;"><i class="fa fa-check"></i> Marca consolidada no mercado</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- container -->
+</header>
+
+@RenderBody()
+
+<script language="javascript">
+    function showSearch() {
+
+        var elemento = document.getElementById("hd-search");
+
+        if (elemento.style.display === 'none') {
+            elemento.style.display = 'block';
+            document.formSearch.termoOption.focus();
+
+        } else {
+            elemento.style.display = 'none';
+        }
+
+    }
+
+</script>
+
+<footer id="footer" class="section section-grey" style="padding-bottom: 15px;">
+    <!-- container -->
+    <div class="container-fluid">
+        <!-- row -->
+        <div class="row">
+            <!-- footer widget -->
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="footer">
+                    <!-- footer logo -->
+                    <div class="footer-logo">
+                        <a class="logo" href="#">
+                            <img src="/img/principal-removebg-preview.png" alt="">
+                        </a>
+                    </div>
+                    <!-- /footer logo -->
+                </div>
+            </div>
+            <!-- /footer widget -->
+            <!-- footer widget -->
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="footer">
+                    <h3 class="footer-header"><a asp-area="Identity" asp-page="/Account/Manage/Index">Minha conta</a></h3>
+                </div>
+                <div class="footer">
+                    <h3 class="footer-header"><a href="">Sobre nós</a></h3>
+                </div>
+                <div class="footer">
+                    <h3 class="footer-header"><a asp-controller="Suporte" asp-action="Index">Fale conosco</a></h3>
+                </div>
+                <div class="footer">
+                    <h3 class="footer-header"><a asp-controller="Suporte" asp-action="Politicas">Políticas do site</a></h3>
+                </div>
+                <div class="footer">
+                    <h3 class="footer-header"><a asp-controller="Consumidor" asp-action="Index">Encontre a ótica mais próxima</a></h3>
+                </div>
+            </div>
+            <!-- /footer widget -->
+
+            <div class="clearfix visible-sm visible-xs"></div>
+
+            <!-- footer widget -->
+            <div class="col-md-4 col-sm-6 col-xs-6">
+                <div class="footer">
+                    <ul class="list-links-social">
+                        <li style="font-size: 14px; margin: 0px 0px 23px;"><a href="https://api.whatsapp.com/send?phone=5521966356709&text=Ol%C3%A1%2C%20preciso%20de%20atendimento!" target="_blank" class="salesFont"><span><i class="fa fa-whatsapp" style="color: chartreuse;"></i></span> WHATSAPP</a></li>
+                        <li style="font-size: 14px; margin: 0px 0px 23px;"><a href="#" class="salesFont"><span><i class="fa fa-facebook-square" style="color: darkblue;"></i></span> Prestige do Brasil</a></li>
+                        <li style="font-size: 14px; margin: 0px 0px 23px;"><a href="https://www.instagram.com/prestigedobrasil/?hl=pt-br" target="_blank" class="salesFont"><span><i class="fa fa-instagram" style="color: coral;"></i></span> @@prestigedobrasil</a></li>
+                        <li style="font-size: 14px; margin: 0px 0px 23px;"><a href="#" class="salesFont"><span><i class="fa fa-envelope-square" style="color: firebrick;"></i></span> atendimento@prestigedobrasil.com.br</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /footer widget -->
+            <!-- footer subscribe -->
+            <div class="col-md-2 col-sm-6 col-xs-6" id="security-logo">
+                <div class="footer">
+                    <h3 class="footer-header">Segurança</h3>
+                    <a href="https://transparencyreport.google.com/safe-browsing/search?url=prestigedobrasil.com.br&amp;hl=pt-PT" target="_blank"><img src="https://sqlvahthnbvdg3fsr4.blob.core.windows.net/blobprestige/selo-google-site-seguro.png" alt="GOOGLE SITE SEGURO" width="130" height="46" style="margin-bottom: 25px;"></a>
+                    <script type="text/javascript"> //<![CDATA[
+                        var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
+                        document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+//]]></script>
+                    <script language="JavaScript" type="text/javascript">
+                        TrustLogo("https://www.positivessl.com/images/seals/positivessl_trust_seal_md_167x42.png", "POSDV", "none");
+                    </script>
+                </div>
+            </div>
+            <!-- /footer subscribe -->
+        </div>
+        <!-- /row -->
+        <hr>
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 text-center">
+                <!-- footer copyright -->
+                <div class="footer-copyright">
+                    Copyright &copy;
+                    2012 - <script>document.write(new Date().getFullYear());</script> Prestige do Brasil. Todos os direitos reservados | 34.264.204/0001-51
+                </div>
+                <div class="footer-copyright">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </div>
+                <!-- /footer copyright -->
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</footer>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/nouislider.min.js"></script>
+<script src="/js/jquery.zoom.min.js"></script>
+<script src="/js/main.js" asp-append-version="true"></script>
+
+
+@RenderSection("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+﻿@page
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model EcommercePrestige.Apresentacao.Areas.Identity.Pages.Account.Manage.PedidoDetailsModel
+@{
+    ViewData["ActivePage"] = ManageNavPages.Pedidos;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Pedido: @Model.PedidoViewModel.Id</h4>
+            @{
+                var rastreio = Model.PedidoViewModel.Rastreio;
+
+                if (Model.PedidoViewModel.Rastreio != null)
+                {
+                    <a class="primary-btn" style="float: right;" asp-controller="Package" asp-action="PackageTracking" asp-route-trackingCode="@Model.PedidoViewModel.Rastreio" asp-route-pedido="@Model.PedidoViewModel.Id" target="_blank">Rastrear</a>
+                }
+                else
+                {
+                    <a class="primary-btn disabled-button" style="float: right;">Rastrear</a>
+                    rastreio = "Aguardando";
+                }
+            }
+
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-4">
+            <h5>Pagamento </h5>
+            <p class="text-uppercase">@Model.PedidoViewModel.FormaDePagamento</p>
+        </div>
+        <div class="col-md-4">
+            <h5>Parcelas </h5>
+            <p>@Model.PedidoViewModel.Parcelas</p>
+        </div>
+        <div class="col-md-4">
+            <h5>Data </h5>
+            <p>@Model.PedidoViewModel.DataPedido</p>
+        </div>
+        <div class="col-md-12"><hr /></div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-4">
+            <h5>Valor Total </h5>
+            <p>@Model.PedidoViewModel.ValorTotal</p>
+        </div>
+        <div class="col-md-4">
+            <h5>Rastreio</h5>
+            <p>@rastreio</p>
+        </div>
+        <div class="col-md-4">
+            <h5>Status</h5>
+            <p class="text-uppercase">@Model.PedidoViewModel.Status</p>
+        </div>
+
+    </div>
+    <div>
+    </div>
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Produtos do pedido</h4>
+        </div>
+        <table class="shopping-cart-table table">
+            <thead>
+            <tr>
+                <th>Produto</th>
+                <th></th>
+                <th class="text-center">Preço</th>
+                <th class="text-center">Quantidade</th>
+                <th class="text-center">Total</th>
+                <th class="text-right"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                foreach (var item in Model.ProdutosPedidoViewModel)
+                {
+                    if (item.Produto != null)
+                    {
+                        <tr>
+                            <td class="thumb"><img src="@item.Produto.UriFoto" alt=""></td>
+                            <td class="details">
+                                <a style="font-size: 14px;" asp-controller="Produtos" asp-action="Details" asp-route-id="@item.Produto.Id">@item.Produto.Referencia</a>
+                                <ul class="color-option" style="display: grid;">
+                                    <li><span>Marca: @item.Produto.MarcaModel</span></li>
+                                    <li class="active" style="display: inline-flex;"><span>Cor:</span><a style="background-image: url(@item.Cor); margin-left: 10px;" title="@item.DescricaoCor"></a></li>
+                                </ul>
+                            </td>
+                            <td style="font-size: 15px;" class="price text-center"><strong>@item.ValorUnitario</strong></td>
+                            <td class="qty text-center">@item.Quantidade</td>
+                            <td style="font-size: 15px;" class="total text-center"><strong class="primary-color">@item.ValorTotal</strong></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="thumb"><img src="https://img2.gratispng.com/20180625/iez/kisspng-aviator-sunglasses-computer-icons-5b3173bc8ad809.9682530515299675485687.jpg" alt=""></td>
+                            <td class="details">
+                                <a style="font-size: 14px;" asp-controller="Kits" asp-action="Index" asp-route-id="@item.Kits.Id">Kit @item.Kits.Nome</a>
+                                <ul class="color-option" style="display: grid;">
+                                    <li><span>Marca: Diversas</span></li>
+                                    <li class="" style="display: inline-flex;"><span>Cor:</span><a style="margin-left: 10px;">N/A</a></li>
+                                </ul>
+                            </td>
+                            <td style="font-size: 15px;" class="price text-center"><strong>@item.ValorUnitario</strong></td>
+                            <td class="qty text-center">@item.Quantidade</td>
+                            <td style="font-size: 15px;" class="total text-center"><strong class="primary-color">@item.ValorTotal</strong></td>
+                        </tr>
+                    }
+
+                }
+            }
+            </tbody>
+        </table>
+        <div class="pull-left">
+            <a class="primary-btn" asp-controller="Pedido" asp-action="Impressao" asp-route-pedido="@Model.PedidoViewModel.Id" target="_blank"><i class="fa fa-print"></i>  Imprimir</a>
+        </div>
+        <div class="pull-right" style="display: inline-flex;">
+            <p>
+                Paginas: @Html.PagedListPager(
+                             Model.ProdutosPedidoViewModel,
+                             pagina => Url.Action("",
+                                 new
+                                 {
+                                     pagina,
+                                     pedido = @Model.PedidoViewModel.Id
+                                 }
+                                 ),
+                             new PagedListRenderOptions()
+                             {
+                                 UlElementClasses = new List<string> { "store-pages" },
+
+                                 DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                                 DisplayLinkToPreviousPage = PagedListDisplayMode.Never
+
+                             })
+            </p>
+
+        </div>
+    </div>
+</div>

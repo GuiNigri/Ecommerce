@@ -1,0 +1,209 @@
+﻿@page
+@model RegisterModel
+
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a asp-action="Index">Home</a></li>
+            <li class="active">Cadastro</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="alert control-label text-center" style="background-color: steelblue; color: white;">
+            </div>
+        </div>
+        <div class="row">
+            <div id="formConsulta">
+                <div class="col-md-6">
+                    <form asp-route-returnUrl="Consulta" method="post" class="clearfix">
+                        <div class="section-title">
+                            <h4 class="title">Informe seu CNPJ</h4>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group row">
+                                <label for="CnpjConsulta"></label>
+                                <input class="input form-control" name="CnpjConsulta" id="CnpjConsulta" type="number" required placeholder="CNPJ (Somente Números)" asp-for="Input.CnpjConsulta"/>
+                            </div>
+                        </div>
+                        <div class="col-md-2" style="margin-top: 20px;">
+                            <div class="form-group" style="float: right;">
+                                <input class="primary-btn" type="submit" title="Consultar" Value="Consultar">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <form class="clearfix" asp-route-returnUrl="@Model.ReturnUrl" method="post" id="formCadEmpresa" autocomplete="off">
+                <div id="formEmpresa">
+                    <div class="col-md-6" style="float: right;">
+                        <div class="billing-details">
+                            <div class="section-title">
+                                <h4 class="title">Informações da empresa</h4>
+                            </div>
+                            <div class="form-group">
+                                <input hidden asp-for="Input.Cnpj">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.RazaoSocial"> Razão Social</label>
+                                <input class="input form-control" asp-for="Input.RazaoSocial" readonly placeholder="Razao Social">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.Cnae"> Atividade Principal</label>
+                                <input class="input form-control" asp-for="Input.Cnae" readonly placeholder="Atividade Principal">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.Cep"> CEP</label>
+                                <input class="input form-control" asp-for="Input.Cep" readonly placeholder="CEP">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.Logradouro"> Logradouro</label>
+                                <input class="input form-control" asp-for="Input.Logradouro" readonly placeholder="Logradouro">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.Numero"> Numero</label>
+                                <input class="input form-control" asp-for="Input.Numero" readonly placeholder="Numero">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.Bairro"> Bairro</label>
+                                <input class="input form-control" asp-for="Input.Bairro" readonly placeholder="Bairro">
+                            </div>
+                            <div class="form-group">
+                                <input class="input hidden" readonly asp-for="Input.Municipio" >
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Input.Uf"> Estado</label>
+                                <input class="input form-control" asp-for="Input.Uf" readonly placeholder="Estado">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="margin-top: 10px;">
+                        <div class="section-title">
+                            <h4 class="title">Informações Complementares</h4>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Input.NomeOtica"> Nome Fantasia</label>
+                            <input class="input form-control" asp-for="Input.NomeOtica" required placeholder="Nome Fantasia">
+                            <span asp-validation-for="Input.NomeOtica" class="text-danger" style="font-weight: bold"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Input.Telefone"> Telefone com DDD (somente números)</label>
+                            <input class="input form-control" asp-for="Input.Telefone" required placeholder="Telefone" type="number">
+                            <span asp-validation-for="Input.Telefone" class="text-danger" style="font-weight: bold"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Input.Complemento"> Complemento do endereço (Ex. Sala, Loja)</label>
+                            <input class="input form-control" asp-for="Input.Complemento" placeholder="Complemento">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" onclick="EscondeElemento('formConta','formEmpresa','formConsulta')" class="primary-btn" style="width: 100%; margin-top: 23px;">Proxima Etapa</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-md-offset-3" id="formConta" style="margin-top: 3px; display: none;">
+                    <div class="section-title">
+                        <h4 class="title">Conta</h4>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="Input.NomeCompleto"></label>
+                        <input class="input form-control" asp-for="Input.NomeCompleto"/>
+                        <span asp-validation-for="Input.NomeCompleto" class="text-danger" style="font-weight: bold"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="Input.Email"></label>
+                        <input class="input form-control" asp-for="Input.Email"/>
+                        <span asp-validation-for="Input.Email" class="text-danger" style="font-weight: bold"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="Input.Password">Senha</label>
+                        <input class="input form-control" asp-for="Input.Password"/>
+                        <span asp-validation-for="Input.Password" class="text-danger" style="font-weight: bold"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="Input.ConfirmPassword">Confirme sua senha</label>
+                        <input class="input form-control" asp-for="Input.ConfirmPassword"/>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger" style="font-weight: bold"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <button type="button" class="primary-btn" onclick="EscondeElemento('formConta', 'formEmpresa', 'formConsulta')" style="margin-top: 23px; background-color: black;" id="btnReturn">Etapa Anterior</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="primary-btn" style="margin-top: 23px;" id="btnCadastrar">Cadastrar</button>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="loadFinalizar" style="margin-top: 28px;">
+                                <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i> Cadastrando...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script language="javascript">
+    function EscondeElemento(id, id2, id3) {
+
+        var elemento = document.getElementById(id);
+        var elemento2 = document.getElementById(id2);
+        var elemento3 = document.getElementById(id3);
+
+        if (elemento.style.display === 'none') {
+            elemento2.style.display = 'none';
+            elemento3.style.display = 'none';
+            elemento.style.display = 'block';
+
+        } else {
+            elemento.style.display = 'none';
+            elemento2.style.display = 'block';
+            elemento3.style.display = 'block';
+            
+        }
+
+
+    }
+
+    $('#btnCadastrar').on('click', function (e) {
+        var button = $('#btnCadastrar');
+        var buttonReturn = $('#btnReturn');
+
+        button.prop('disabled', true);
+        buttonReturn.prop('disabled', true);
+
+        var valid = $("#formCadEmpresa").valid();
+        console.log(valid);
+        if (!valid) {
+
+            e.preventDefault();
+            button.prop('disabled', false);
+            buttonReturn.prop('disabled', false);
+        } else {
+            $('.loadFinalizar').show();
+            $('#formCadEmpresa').submit();
+        }
+    });
+
+
+    $(document).ready(function() {
+        $('.loadFinalizar').hide();
+    });
+
+
+</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

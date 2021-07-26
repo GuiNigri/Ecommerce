@@ -1,0 +1,10 @@
+﻿@model EcommercePrestige.Application.ViewModel.BannersHomeViewModel
+
+@{
+    foreach (var item in Model.Banners)
+    {
+        <div class="banner banner-1 carrossel">
+            <img src="@item.UrlBanner" alt="">
+        </div>
+    }
+}

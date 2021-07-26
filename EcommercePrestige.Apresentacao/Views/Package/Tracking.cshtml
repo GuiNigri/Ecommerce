@@ -1,0 +1,66 @@
+﻿@model EcommercePrestige.Application.ViewModel.TrackingHistoryViewModel
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div asp-validation-summary="ModelOnly" class="alert control-label text-center" style="background-color: #F8694A; color: white;"></div>
+                <form asp-controller="Package" asp-action="PackageTracking" method="get" class="clearfix">
+                    <div class="section-title">
+                        <h4 class="title">Rastreio de Pedidos</h4>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="protocolo"> Codigo do rastreio</label>
+                        <input class="input form-control" name="trackingCode" id="trackingCode" type="text" required placeholder="Rastreio" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="documento"> Numero do pedido</label>
+                        <input class="input form-control" name="pedido" id="pedido" type="text" required placeholder="Pedido" />
+                    </div>
+                    <div class="form-group" style="float: right;">
+                        <input class="primary-btn" type="submit" title="Consultar" Value="Rastrear">
+                    </div>
+                </form>
+
+                @{
+                    if (Model.PackageTrackingList.Any())
+                    {
+                        <div class="section-title">
+                            <h4 class="title">Rastreamento do pedido</h4>
+                        </div>
+
+                        foreach (var item in Model.PackageTrackingList)
+                        {
+
+                            <div class="col-md-12">
+                                <h5>Status:</h5>
+                                <p>@item.Status</p>
+                            </div>
+                            <div class="col-md-8">
+                                <h5>Localização:</h5>
+                                <p>@item.Location</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Data:</h5>
+                                <p>@item.Date.ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                            <div class="col-md-12">
+                                <hr />
+                            </div>
+                         
+                        }
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $( "div.alert" ).fadeIn( 300 ).delay( 5000 ).fadeOut( 700 );
+    });
+</script>

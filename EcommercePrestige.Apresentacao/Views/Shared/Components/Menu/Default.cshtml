@@ -1,0 +1,49 @@
+﻿@model EcommercePrestige.Application.ViewModel.MenuViewModel
+
+            <!-- category nav -->
+            <div class="menu-nav">
+                <span class="menu-header">Menu <i class="fa fa-bars"></i></span>
+                <ul class="menu-list" style="margin-top: 10px; text-align: center;">
+                    @{
+                        foreach (var item in Model.Marcas)
+                        {
+                            var nomeLowCaps = item.Nome.ToLower();
+
+                            if (nomeLowCaps != "airtech")
+                            {
+                                if (nomeLowCaps == "azzaro")
+                                {
+                                    <li class="menu-margin"><a asp-controller="Produtos" asp-action="GetCategory" asp-route-marca="@item.Nome" title="Veja toda a coleção Azzaro"><span style="font-family: futura-pt,sans-serif; font-size: 20px; letter-spacing: .3rem; line-height: 1; font-weight: 400;">AZZARO</span></a></li>
+                                }
+                                else if (nomeLowCaps == "people")
+                                {
+                                    <li class="menu-margin">
+                                        <a asp-controller="Produtos" asp-action="GetCategory" asp-route-marca="@item.Nome" title="Veja toda a coleção People">
+                                            <span style="color: #305496; font-weight: normal; font-family: STXihei;">PEO</span><span style="color: red; font-weight: normal; font-family: STXihei;">PLE</span>
+                                        </a>
+                                    </li>
+                                }
+                                else if (nomeLowCaps == "prestige")
+                                {
+                                    <li class="menu-margin">
+                                        <a asp-controller="Produtos" asp-action="GetCategory" asp-route-marca="@item.Nome" title="Veja toda a coleção Prestige">
+                                            <span style="font-family: Candara; font-weight: 500;">PRESTIGE</span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="menu-margin"><a asp-controller="Produtos" asp-action="GetCategory" asp-route-marca="@item.Nome">@item.Nome</a></li>
+                                }
+
+                            }
+
+                        }
+                    }
+
+                    <li class="menu-margin"><a asp-controller="Suporte" asp-action="Index" style="font-size: 15px;">Fale conosco</a></li>
+
+                    <li class="menu-margin"><a asp-controller="Suporte" asp-action="Index" style="font-size: 15px;">Assistência técnica</a></li>
+                </ul>
+            </div>
+<!-- menu nav -->

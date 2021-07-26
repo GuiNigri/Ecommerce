@@ -1,0 +1,281 @@
+﻿@using EcommercePrestige.Application.ViewModel
+@{
+    var corIdAviseMe = 0;
+    var produtoAction = false;
+}
+@model EcommercePrestige.Application.ViewModel.ProdutoDetailsViewModel
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Produtos</a></li>
+            <li class="active">@Model.Produto.Referencia</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- /<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="background-color: blue; height: 80px;">
+                <span style="color: whitesmoke">Local do banner</span>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!--  Product Details -->
+            <div class="product product-details clearfix">
+
+                <div class="col-md-8" id="fotosProdutos">
+                    <partial name="ProdutoFotoViewPartial" model="Model.ImgProduto ?? new List<ProdutoFotoViewModel>()" />
+                </div>
+                <div class="col-md-3" id="produto-options">
+                    <div class="product-body">
+                        <partial name="ModelStatusPartial" model="@Model.StatusModel" />
+                        <div class="product-label">
+                            @{
+                                if (Model.Produto.StatusProduto == "new")
+                                {
+                                    <span style="font-size: 13px;">Lançamento</span>
+                                }
+                            }
+
+                        </div>
+                        <h4 class="product-name text-uppercase">@Model.Produto.MarcaModel @Model.Produto.Referencia</h4>
+                        @{
+                            if (Model.Logado)
+                            {
+                                <h4 class="product-price" style="font-weight: normal;">R$ @Model.Produto.ValorVenda </h4>
+                            }
+                            else
+                            {
+                                <h6 class="product-price text-uppercase" style="font-weight: normal;"><a asp-area="Identity" asp-page="/Account/Login">faça o login para ver o valor!</a></h6>
+                            }
+                        }
+
+                        <p style="font-size: 12px;">Marca: <span class="text-uppercase">@Model.Produto.MarcaModel</span></p>
+                        <p style="font-size: 12px;">Material: <span class="text-uppercase">@Model.Produto.MaterialModel</span></p>
+                        <p>
+                            @Model.Produto.Descricao
+                        </p>
+                        <form asp-controller="Carrinho" asp-action="Adicionar" method="post">
+                            <div class="product-options">
+                                <ul class="size-option">
+                                    <li><span style="font-size: 12px;">Tamanho:</span></li>
+                                    <li class="active"><a style="font-size: 12px; font-weight: normal;">@Model.Produto.Tamanho</a></li>
+                                </ul>
+
+                                <input type="hidden" id="prodId" name="prodId" value="@Model.Produto.Id">
+                                <ul class="color-option" id="selType" name="selType" required>
+                                    <li><span style="font-size: 12px;">Cor:</span></li>
+                                    @{
+                                        foreach (var cor in Model.CorProduto)
+                                        {
+
+                                            corIdAviseMe = cor.Id;
+
+                                            var ci = $"| C{@cor.CodigoInternoCor}";
+
+                                            if (cor.Estoque > 0)
+                                            {
+
+                                                if (cor.Id == Model.CorSelecionada)
+                                                {
+                                                    <input type="hidden" id="corId" name="corId" value="@cor.CorId,@cor.Id" required>
+                                                    <li class="liactive active" value="@cor.CorId,@cor.Id" id="imgvalue-@cor.Id"><a href="#" style="background-image: url(@cor.ImgCor); border-radius: 74px;" title="@cor.DescricaoCor  @ci" onclick="getFotos(@cor.Id, true);"></a></li>
+                                                    produtoAction = true;
+                                                }
+                                                else
+                                                {
+                                                    <li class="liactive" value="@cor.CorId,@cor.Id" id="imgvalue-@cor.Id"><a href="#" style="background-image: url(@cor.ImgCor); border-radius: 74px;" title="@cor.DescricaoCor  @ci" onclick="getFotos(@cor.Id, true);"></a></li>
+                                                }
+
+
+
+                                            }
+                                            else
+                                            {
+                                                <input type="hidden" id="corId" name="corId" value="" required>
+                                                <li class="liactive"><a href="#" style="background-image: url(@cor.ImgCor); border-radius: 74px;" title="@cor.DescricaoCor @ci" onclick="getFotos(@cor.Id, false);"></a></li>
+                                            }
+
+                                        }
+                                    }
+
+                                </ul>
+                            </div>
+                            <hr />
+                            <div class="product-btns">
+                                <div id="group-alternador">
+                                    <partial name="ProdutoActionViewPartial" model="(@produtoAction,Model.ReturnUrl,corIdAviseMe)" />
+                                </div>
+                                <button type="button" class="primary-btn" style="width: 100%; background-color: slategrey;" onclick="location.href = '@Url.Action("Return", "Produtos", new {returnUrl = Model.ReturnUrl})'">Continuar comprando</button>
+                                <button type="button" class="primary-btn" style="width: 100%; background-color: black; margin-top: 10px;" onclick="location.href = '@Url.Action("Index", "Carrinho", new {returnUrl = Model.ReturnUrl})'">Ver Carrinho</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /Product Details -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        @{
+            if (Model.ProdutosCarrossel.Any())
+            {
+                <!-- row -->
+                <div class="row">
+                    <!-- section-title -->
+                    <div class="col-md-12">
+                        <div class="section-title">
+                            <h3 class="title">Você pode gostar</h3>
+                            <div class="pull-right">
+                                <div class="product-slick-dots-details custom-dots"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /section-title -->
+                    <!-- Product Slick -->
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div id="product-slick-details" class="product-slick">
+                                <!-- Product Single -->
+                                @{
+                                    foreach (var item in Model.ProdutosCarrossel)
+                                    {
+
+                                        @await Component.InvokeAsync("Produto", new { produtoViewModel = item, exibirPreco = true })
+
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Product Slick -->
+                </div>
+            }
+        }
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+    $(".liactive").click(
+        function(event) {
+            $('.liactive').removeClass('active');
+            $(this).addClass('active');
+            event.preventDefault();
+        }
+    );
+
+    $("#selType li").click(function() {
+        $("#corId").val($(this).attr("value"));
+    });
+
+    function AviseMe(idCor) {
+        $.ajax({
+            url: '@Url.Action("CadastrarAviseMe", "Produtos")',
+            type: 'post',
+            data: {
+                corId: idCor,
+                email: document.getElementById('emailesgotado').value
+            }
+        }).then(function (response) {
+            if (response === true)
+            {
+                alert("Cadastrado com sucesso");
+            }
+            else
+            {
+                alert("Erro ao cadastrar");
+            }
+            
+        });
+    }
+
+    function getFotos(id, estoque) {
+        $.ajax({
+            url: '@Url.Action("GetFotoByCor", "Produtos")',
+            type: 'get',
+            data: {
+                produtoId: id
+            }
+        }).done(function(response) {
+            $("#fotosProdutos").html(response);
+
+            $('#product-main-view').slick({
+                infinite: true,
+                speed: 300,
+                dots: false,
+                arrows: true,
+                fade: true,
+                asNavFor: '#product-view'
+            });
+
+            $('#product-view').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                arrows: true,
+                centerMode: true,
+                focusOnSelect: true,
+                asNavFor: '#product-main-view'
+            });
+
+            $('#product-main-view .product-view').zoom({
+                magnify: 0.2
+            });
+
+        });
+
+        var response = "";
+
+        if (estoque === false) {
+
+            response = "<div class='form-group'>" +
+                "<label for='emailesgotado' class='control-label' style='margin-bottom: 15px; width: 100%; text-align: center;'> PRODUTO SEM ESTOQUE</label>" +
+                "<input type='email' name='emailesgotado' id='emailesgotado' class='input form-group' placeholder='DIGITE SEU EMAIL' style='text-align: center;'/>" +
+                "<button type='button' class='primary-btn' style='width: 100%;' id='btnAviseMe' onclick='AviseMe(@corIdAviseMe)'> AVISE-ME</button>" +
+                "</div>";
+
+            $("#group-alternador").html(response);
+
+        } else {
+            response = "<div class='qty-input'>" +
+                "<div class='form-group'>" +
+                " <span style='font-size: 14px;'> Quant: </span> " +
+                " <input class='input' type='number' id='quantNumber' name='quantNumber' required> " +
+                " </div> " +
+                " </div> " +
+                " <input type='hidden' name='returnUrl' value='@Model.ReturnUrl' /> " +
+                " <button type='submit' class='primary-btn add-to-cart'><i class='fa fa-shopping-cart'></i> carrinho</button>";
+
+            $("#group-alternador").html(response);
+        }
+
+    };
+
+
+</script>
+

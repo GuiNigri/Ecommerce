@@ -1,0 +1,61 @@
+﻿@page
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
+@model PedidosModel
+@{
+    ViewData["ActivePage"] = ManageNavPages.Pedidos;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-title">
+            <h4 class="title">Pedidos</h4>
+        </div>
+        <table class="shopping-cart-table table">
+            <thead>
+            <tr>
+                <th>Pedido</th>
+                <th class="text-center">Data do pedido</th>
+                <th class="text-center">Valor Total</th>
+                <th class="text-center">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                foreach (var pedido in Model.listaPedidosUsuario)
+                {
+                    <tr>
+                        <td class="details"><a style="font-size: 14px;" asp-area="Identity" asp-page="/Account/Manage/PedidoDetails" asp-route-pedido="@pedido.Id">@pedido.Id</a></td>
+                        <td class="details text-center">@pedido.DataPedido</td>
+                        <td class="details text-center">@pedido.ValorTotal</td>
+                        <td class="details text-center" style="font-weight: bold;">@pedido.Status</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+        <div class="pull-right" style="display: inline-flex;">
+            <p>
+                Paginas: @Html.PagedListPager(
+                             Model.listaPedidosUsuario,
+                             pagina => Url.Action("",
+                                 new
+                                 {
+                                     pagina
+                                 }
+                                 ),
+                             new PagedListRenderOptions()
+                             {
+                                 UlElementClasses = new List<string> { "store-pages" },
+
+                                 DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                                 DisplayLinkToPreviousPage = PagedListDisplayMode.Never
+
+                             })
+            </p>
+
+        </div>
+    </div>
+</div>

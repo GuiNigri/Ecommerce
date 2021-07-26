@@ -1,0 +1,29 @@
+﻿@model EcommercePrestige.Application.ViewModel.PedidoSuccessViewModel
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6 col-md-offset-3 alert alert-success control-label">
+                    <h5 class="text-uppercase text-center">Pedido Realizado Com sucesso! <br /><br /> Numero do seu Pedido: @Model.NumeroPedido</h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="section-title">
+                            <h4 class="title"><i class="fa fa-info-circle"> Importante</i></h4>
+                        </div>
+                        <p class="text-center">
+                            Agradecemos por efetuar a compra em nossa loja virtual, nesse momento seu pedido já esta registrado em nosso sistema e já estamos dando andamento nele,
+                            dentro de no máximo 24 horas, um consultor entrará em contato para confirmar o pedido e esclarecer possíveis detalhes pendentes.<br/>
+                            Você poderá acompanhar o status do seu pedido na seção <u><a asp-area="Identity" asp-page="/Account/Manage/Pedidos">meus pedidos</a></u> da sua conta, lembrando que qualquer duvida ou solicitação poderá ser feita atraves da nossa <u><a asp-controller="Suporte" asp-action="Index">central de atendimento ou suporte</a></u>.<br/><br/>
+                            <strong> Mais uma vez agradecemos a preferência e confiança no nosso trabalho, desejamos boas vendas e aguardamos sua próxima visita!<br/>
+                                Equipe Prestige do Brasil.</strong>
+                        </p>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3" style="margin-top: 20px; text-align: center;">
+                        <a class="primary-btn" asp-controller="Pedido" asp-action="Impressao" asp-route-pedido="@Model.NumeroPedido" target="_blank"><i class="fa fa-print"></i>  Imprimir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,170 @@
+﻿@model EcommercePrestige.Application.ViewModel.HomeViewModel
+<body>
+    <!-- HOME -->
+    <div id="home">
+        <!-- container -->
+        <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+            <!-- home wrap -->
+            <div class="home-wrap">
+                <!-- home slick -->
+                <div id="home-slick">
+                    <!-- banner -->
+                    @await Component.InvokeAsync("BannersHome")
+                    <!-- /banner -->
+                </div>
+                <!-- /home slick -->
+            </div>
+            <!-- /home wrap -->
+        </div>
+        <!-- /container -->
+        <div id="banner-bottom-header">
+        </div>
+    </div>
+    <!-- /HOME -->
+    <!-- section -->
+    <div class="section">
+        <!-- container -->
+        <div class="container-fluid">
+            @{
+                if (Model.ListAzzaro.Any())
+                {
+                    <!-- row -->
+                    <div class="row">
+                        <!-- section-title -->
+                        <div class="col-md-12">
+                            <div class="section-title">
+                                <h3 class="title">BEST SELLERS AZZARO</h3>
+                                <div class="pull-right">
+                                    <div class="product-slick-dots-1 custom-dots"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /section-title -->
+                        <!-- Product Slick -->
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div id="product-slick-1" class="product-slick">
+                                    <!-- Product Single -->
+                                    @{
+                                        foreach (var item in Model.ListAzzaro)
+                                        {
+
+                                            @await Component.InvokeAsync("Produto", new { produtoViewModel = item, exibirPreco = false })
+
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Product Slick -->
+                    </div>
+                }
+            }
+
+            <!-- row -->
+            @{
+                if (Model.ListPeople.Any())
+                {
+                    <div class="row">
+                        <!-- section title -->
+                        <div class="col-md-12">
+                            <div class="section-title">
+                                            <h3 class="title">BEST SELLERS PEOPLE</h3>
+                                <div class="pull-right">
+                                    <div class="product-slick-dots-2 custom-dots">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- section title -->
+                        <!-- Product Slick -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div id="product-slick-2" class="product-slick">
+                                    <!-- Product Single -->
+                                    @{
+                                        foreach (var item in Model.ListPeople)
+                                        {
+
+                                            @await Component.InvokeAsync("Produto", new { produtoViewModel = item, exibirPreco = false})
+                                            <!-- /Product Single -->
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Product Slick -->
+                    </div>
+                }
+            }
+
+            <!-- /row -->
+            <!-- row -->
+            @{
+                if (Model.ListPrestige.Any())
+                {
+                    <div class="row">
+                        <!-- section title -->
+                        <div class="col-md-12">
+                            <div class="section-title">
+                                            <h3 class="title">BEST SELLERS PRESTIGE</h3>
+                                <div class="pull-right">
+                                    <div class="product-slick-dots-3 custom-dots">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- section title -->
+                        <!-- Product Slick -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div id="product-slick-3" class="product-slick">
+                                    <!-- Product Single -->
+                                    @{
+                                        foreach (var item in Model.ListPrestige)
+                                        {
+
+                                            @await Component.InvokeAsync("Produto", new { produtoViewModel = item, exibirPreco = false })
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Product Slick -->
+                    </div>
+                }
+            }
+
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /section -->
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    $(".liactive").click(
+        function (event) {
+            event.preventDefault();
+        }
+    );
+
+    function getFotos(id, idProduto) {
+        $.ajax({
+            url: '@Url.Action("GetFotoByCorIndex", "Produtos")',
+            type: 'get',
+            data: {
+                produtoId: id
+            }
+        }).done(function (response) {
+
+            $("#MainFoto"+idProduto).html(response);
+            $("#idCorDetails"+idProduto).val(id).attr("value");
+        });
+    };
+</script>
+
