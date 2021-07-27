@@ -157,7 +157,7 @@ namespace EcommercePrestige.CorreiosApi
 
                         var correiosWsModel = new CorreioWebServiceModel();
 
-                        if (valorTotalPedido > 1500 && nomeServico == "Pac")
+                        if (valorTotalPedido > 1000 && nomeServico == "Pac")
                         {
                             correiosWsModel.SetWebServiceData("Proprio", retornoCorreios.Servicos[0].PrazoEntrega, "0,00");
 
@@ -176,7 +176,7 @@ namespace EcommercePrestige.CorreiosApi
                     }
                 }
 
-                if (resultList.Count == 1 && valorTotalPedido > 1500)
+                if (resultList.Count == 1 && valorTotalPedido > 1000)
                 {
                     resultList[0].SetValor("0,00");
                 }
