@@ -18,7 +18,7 @@ namespace Ecommerce.Api.Authentication
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
-        public string GenerateJwtToken(IdentityUser user)
+        public (string,DateTime) GenerateJwtToken(IdentityUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -39,8 +39,9 @@ namespace Ecommerce.Api.Authentication
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = jwtTokenHandler.WriteToken(token);
+            var expireDate = tokenDescriptor.Expires ?? throw new ArgumentNullException("tokenDescriptor.Expires");
 
-            return jwtToken;
+            return (jwtToken, expireDate);
         }
     }
 }

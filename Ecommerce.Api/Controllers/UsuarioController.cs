@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Ecommerce.Api.Authentication;
@@ -37,15 +38,18 @@ namespace Ecommerce.Api.Controllers
 
             if (!result)
             {
-                return NotFound(new { message = "Email ou senha inválidos" });
+                return Unauthorized(new {message = "Email ou senha Inválidos"});
             }
 
-            var token = _tokenProvider.GenerateJwtToken(identityUser);
+            var (token,expiresDate) = _tokenProvider.GenerateJwtToken(identityUser);
 
 
             return new
             {
-                token
+                status = true,
+                token,
+                expires = expiresDate
+
             };
         }
 
