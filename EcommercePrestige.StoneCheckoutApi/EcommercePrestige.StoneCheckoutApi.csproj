@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Pagar.me" Version="2.7.1" />
+    <PackageReference Include="Pagar.me" Version="2.7.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Correios.NET;
+using Correios.NET.Models;
 using EcommercePrestige.Model.Entity;
 using EcommercePrestige.Model.Interfaces.Infrastructure;
 using ServiceReferenceCorreios;
@@ -56,7 +57,17 @@ namespace EcommercePrestige.CorreiosApi
 
         public async Task<bool> VerificarSeEntregue(string rastreio)
         {
-            var package = await _correios.GetPackageTrackingAsync(rastreio);
+            Package package;
+
+            try
+            {
+                package = await _correios.GetPackageTrackingAsync(rastreio);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
 
             return package.IsDelivered;
         }
