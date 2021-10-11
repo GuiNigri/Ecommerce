@@ -95,6 +95,7 @@ namespace EcommercePrestige.Application.ViewModel
                 lista = new[]
                 {
                     new SelectListItem {Value = "", Text = "Selecione..."},
+                    new SelectListItem {Value = "boleto", Text = "Boleto bancário"},
                     new SelectListItem{Value = "deposito",Text = "Depósito em conta"},
                     new SelectListItem{Value = "cartao",Text = "Cartão de crédito"}
 
