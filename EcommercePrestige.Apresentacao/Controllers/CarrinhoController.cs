@@ -134,7 +134,7 @@ namespace EcommercePrestige.Apresentacao.Controllers
                 ModelState.AddModelError(string.Empty, TempData["Error"].ToString());
             }
 
-            return View(new CarrinhoPagamentoViewModel(empresa, carrinho, valorTotalPedido, statusModel,fretes));
+            return View(new CarrinhoPagamentoViewModel(empresa, carrinho, valorTotalPedido, statusModel, fretes));
 
         }
 

@@ -126,7 +126,18 @@
                     <h5 style="color: steelblue;" id="subtotalModal">@Model.ValorPedido.ToString("C") </h5>
                 </div>
                 <div class="col-md-12" style="padding: 0px;">
-                    <hr/>
+                    <hr />
+                </div>
+                <div id="TaxaBoletoModal" style="display: none">
+                    <div class="col-md-6" style="padding: 0px;">
+                        <h5 class="text-uppercase">Taxa Boleto </h5>
+                    </div>
+                    <div class="col-md-6" style="padding: 0px;">
+                        <h5 style="color: steelblue;" id="subtotalModal">R$ 8,00</h5>
+                    </div>
+                    <div class="col-md-12" style="padding: 0px;">
+                        <hr />
+                    </div>
                 </div>
                 <div class="col-md-6" style="padding: 0px;">
                     <h5 class="text-uppercase">Frete </h5>
@@ -135,7 +146,7 @@
                     <h5 class="text-uppercase" style="color: steelblue;" id="freteModalExibicao">R$ 0,00 </h5>
                 </div>
                 <div class="col-md-12" style="padding: 0px;">
-                    <hr/>
+                    <hr />
                 </div>
                 <div class="col-md-6" style="padding: 0px;">
                     <h4 class="text-uppercase">Valor Total </h4>
@@ -156,6 +167,8 @@
         var valorPedido = Model.ValorPedido.ToString("N2").Replace(".","").Replace(",", ".");
     }
     var valorPedido = 0;
+    var taxaBoleto = 0;
+    var valorFrete = 0;
 
     function pagarme() {
         // inicia a instância do checkout
@@ -198,15 +211,20 @@
         console.log(valorFrete);
         console.log(servicoEnvio);
 
-        valorPedido = String((@valorPedido + valorFrete).toFixed(2)).replace(",", "").replace(".", "");
+        this.valorFrete = valorFrete;
+
+        valorPedido = String((@valorPedido + valorFrete + taxaBoleto).toFixed(2)).replace(",", "").replace(".", "");
 
 
-        document.getElementById('totalModal').innerHTML = `<h4 style='color: steelblue;'>R$  ${parseFloat(valorPedido / 100).toLocaleString('pt-br')} </h4>`;
+        atualizarValorEmTela();
         document.getElementById('freteModalExibicao').innerHTML = `<h5 class="text-uppercase" style="color: steelblue;" id="freteModalExibicao">R$  ${parseFloat(valorFrete).toLocaleString('pt-br')} </h5>`;
         document.getElementById('servicoFrete').value = servicoEnvio;
     };
 
-    $("#formaPag").change(function() {
+    $("#formaPag").change(function () {
+
+        exibirModalTaxaBoleto('none');
+
         var frmPag = $(this).val();
         $.ajax({
             url: '@Url.Action("GetParcelas", "Carrinho")',
@@ -225,15 +243,47 @@
         });
 
         if (frmPag == "cartao") {
-            document.getElementById("ModalPagamentoCartao").style.display = 'block';
-            document.getElementById("ModalPagamentoNormal").style.display = 'none';
+            alternarModalDePagamentoEntreCartaoENormal('block', 'none')
         }
         else {
-            document.getElementById("ModalPagamentoCartao").style.display = 'none';
-            document.getElementById("ModalPagamentoNormal").style.display = 'block';
+            alternarModalDePagamentoEntreCartaoENormal('none', 'block')
         }
+
+        verificarValorMinimoBoletoSemTaxa(frmPag);
     });
 
+    function alternarModalDePagamentoEntreCartaoENormal(modalCartao, modalNormal)
+    {
+        document.getElementById("ModalPagamentoCartao").style.display = modalCartao;
+        document.getElementById("ModalPagamentoNormal").style.display = modalNormal;
+    }
+
+    function exibirModalTaxaBoleto(modalTaxaBoleto) {
+        document.getElementById("TaxaBoletoModal").style.display = modalTaxaBoleto;
+    }
+
+    function atualizarValorEmTela()
+    {
+        document.getElementById('totalModal').innerHTML = `<h4 style='color: steelblue;'>R$  ${parseFloat(valorPedido / 100).toLocaleString('pt-br')} </h4>`;
+    }
+
+    function verificarValorMinimoBoletoSemTaxa(formaDePagamento)
+    {
+        taxaBoleto = 0
+
+        if (formaDePagamento == "boleto" && @valorPedido < 350) {
+
+            taxaBoleto = 8;
+
+            alert("Compras com valor inferior a R$ 350,00, teram uma taxa adicional de R$ 8,00, quando a forma de pagamento escolhida for Boleto Bancario.");
+
+            exibirModalTaxaBoleto('block');
+        }
+
+        valorPedido = String((@valorPedido + valorFrete + taxaBoleto).toFixed(2)).replace(",", "").replace(".", "");
+
+        atualizarValorEmTela();
+    }
 
     function getFrete() {
         $("#freteModal").html("Calculando Frete ...");
