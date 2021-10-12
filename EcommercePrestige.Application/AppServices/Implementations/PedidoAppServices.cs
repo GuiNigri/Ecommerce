@@ -127,6 +127,11 @@ namespace EcommercePrestige.Application.AppServices.Implementations
                     descontoTotal += descontoCliente;
                 }
 
+                if (valorTotal < 350 && carrinhoPagamentoViewModel.FormaPagamento == "boleto")
+                {
+                    valorTotal += 8;
+                }
+
 
                 var pedidoModel = ToPedidoModel(carrinhoPagamentoViewModel, usuario.Id, valorTotal, descontoTotal, dadosEnvio);
 
