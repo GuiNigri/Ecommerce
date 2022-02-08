@@ -21,8 +21,13 @@ namespace EcommercePrestige.Data.Repository
 
         public async Task<IEnumerable<ProdutoCorModel>> GetAllGroupedAsync(string statusAtivacao)
         {
+            
+
             var lista = await _context.ProdutosCorModel.Where(x => (statusAtivacao == null || x.StatusAtivacao == statusAtivacao))
-                .AsEnumerable().DistinctBy(x=>x.CorModelId).ToListAsync();
+                .AsEnumerable()
+                .ToListAsync();
+
+            lista = await MoreEnumerable.DistinctBy(lista, x => x.CorModelId).ToListAsync();
 
             return lista;
         }
