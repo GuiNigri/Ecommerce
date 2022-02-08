@@ -63,6 +63,8 @@ namespace EcommercePrestige.EmailApi
 
                 using var client = new SmtpClient();
 
+                client.CheckCertificateRevocation = false;
+
                 await client.ConnectAsync(_emailSettings.PrimaryDomain, _emailSettings.PrimaryPort, true);
 
                 await client.AuthenticateAsync(_emailSettings.UsernameEmail, _emailSettings.UsernamePassword);
