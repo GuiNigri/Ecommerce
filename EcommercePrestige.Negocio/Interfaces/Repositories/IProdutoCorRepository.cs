@@ -14,5 +14,6 @@ namespace EcommercePrestige.Model.Interfaces.Repositories
         Task<bool> VerificarEstoque(int prodId, int corId, int quantidade, string statusAtivacao);
         Task BaixaEstoque (int id, int quantidade);
         Task<bool> VerificarSeCorExiste(int idProd,int idCor);
+        Task<ProdutoCorModel> ObterPeloCodigoBarrasAsync(string codigoBarras);
     }
 }

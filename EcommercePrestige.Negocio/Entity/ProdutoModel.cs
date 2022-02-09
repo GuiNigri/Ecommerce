@@ -91,6 +91,7 @@
         public bool PedidoSilver { get; private set; }
         public bool PedidoBasic { get; private set; }
         public string StatusAtivacao { get; private set; }
+        public string CodigoBarras { get; private set; }
 
         public void SetEstoque(int estoque)
         {

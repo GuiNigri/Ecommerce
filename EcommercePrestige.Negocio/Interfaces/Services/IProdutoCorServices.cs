@@ -17,5 +17,6 @@ namespace EcommercePrestige.Model.Interfaces.Services
         Task UpdateAsync(int id);
         Task AlterarAtivacaoKitNoProduto(int idCor, string kit);
         Task AlterarEstoqueAsync(int id, int quantidade);
+        Task<ProdutoCorModel> ObterPeloCodigoBarrasAsync(string codigoBarras);
     }
 }

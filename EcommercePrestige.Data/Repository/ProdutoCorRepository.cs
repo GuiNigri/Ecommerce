@@ -90,6 +90,12 @@ namespace EcommercePrestige.Data.Repository
             await _context.SaveChangesAsync();
         }
 
+        public Task<ProdutoCorModel> ObterPeloCodigoBarrasAsync(string codigoBarras)
+        {
+            return _context.ProdutosCorModel
+                .FirstOrDefaultAsync(x => x.CodigoBarras == codigoBarras);
+        }
+
     }
 
 
