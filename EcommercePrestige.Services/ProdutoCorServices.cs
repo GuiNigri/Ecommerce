@@ -142,5 +142,10 @@ namespace EcommercePrestige.Services
 
             await _produtoCorRepository.UpdateAsync(produtoCorModel);
         }
+
+        public async Task<ProdutoCorModel> ObterPeloCodigoBarrasAsync(string codigoBarras)
+        {
+            return await _produtoCorRepository.ObterPeloCodigoBarrasAsync(codigoBarras);
+        }
     }
 }

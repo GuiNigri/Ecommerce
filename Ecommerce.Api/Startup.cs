@@ -12,6 +12,15 @@ using EcommercePrestige.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
+using Ecommerce.Api.Controllers.Produto.AutoMapper;
+using EcommercePrestige.Data.Repository;
+using EcommercePrestige.Model.Interfaces.Repositories;
+using EcommercePrestige.Services;
+using Microsoft.EntityFrameworkCore;
+using EcommercePrestige.Data.Ecommerce.Context;
+using EcommercePrestige.EmailApi;
+using EcommercePrestige.ConsultaReceitaApi;
 
 namespace Ecommerce.Api
 {
@@ -57,8 +66,26 @@ namespace Ecommerce.Api
             
             services.AddScoped<IUserAuthentication, UserAuthentication>();
             services.AddScoped<TokenProvider>();
+            services.AddScoped<IProdutoCorServices, ProdutoCorServices>();
+            services.AddScoped<IProdutoCorRepository, ProdutoCorRepository>();
+            services.AddScoped<IEmailSenderServices, AuthMessageSender>();
+            services.AddScoped<IAviseMeServices, AviseMeServices>();
+            services.AddScoped<IAviseMeRepository, AviseMeRepository>();
+            services.AddScoped<IEmpresaServices, EmpresaServices>();
+            services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            services.AddScoped<IConsultaCnpjAwsApi, ConsultaReceitaAwsApi>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
+            services.AddDbContext<EcommerceContext>(options =>
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("EcommerceContext")));
 
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             //services.RegisterInjections(Configuration);
         }

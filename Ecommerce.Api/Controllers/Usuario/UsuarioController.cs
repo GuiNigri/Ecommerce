@@ -8,8 +8,9 @@ using EcommercePrestige.Model.Interfaces.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Ecommerce.Api.Controllers.Usuario.Dto;
 
-namespace Ecommerce.Api.Controllers
+namespace Ecommerce.Api.Controllers.Usuario
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,6 +20,8 @@ namespace Ecommerce.Api.Controllers
         private readonly IUserAuthentication _userAuthentication;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly TokenProvider _tokenProvider;
+
+        private const string MensagemUsuarioSenhaInvalido = "Email ou senha Inválidos";
 
         public UsuarioController(IUserAuthentication userAuthentication, UserManager<IdentityUser> userManager, TokenProvider tokenProvider)
         {
@@ -30,35 +33,21 @@ namespace Ecommerce.Api.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<dynamic>> Login(UserAuthenticationModel user)
+        public async Task<ActionResult<LoginResponse>> Login(UserAuthenticationModel user)
         {
+            if (user is null)
+                return BadRequest();
+
             var identityUser = await _userManager.FindByEmailAsync(user.email);
 
             var result = await _userAuthentication.IdentityAuthenticate(user.email, user.password, true);
 
-            if (!result)
-            {
-                return Unauthorized(new {message = "Email ou senha Inválidos"});
-            }
-
+            if (result is false)
+                return Unauthorized(MensagemUsuarioSenhaInvalido);
+            
             var (token,expiresDate) = _tokenProvider.GenerateJwtToken(identityUser);
 
-
-            return new
-            {
-                status = true,
-                token,
-                expires = expiresDate
-
-            };
-        }
-
-        [HttpGet]
-        [Route("pegar")]
-        [Authorize]
-        public async Task<ActionResult<string>> Test()
-        {
-            return "funcionou";
+            return Ok(new LoginResponse(status: true, token, expiresDate));
         }
     }
 }
