@@ -20,6 +20,7 @@ using EcommercePrestige.Services;
 using Microsoft.EntityFrameworkCore;
 using EcommercePrestige.Data.Ecommerce.Context;
 using EcommercePrestige.EmailApi;
+using EcommercePrestige.ConsultaReceitaApi;
 
 namespace Ecommerce.Api
 {
@@ -70,6 +71,10 @@ namespace Ecommerce.Api
             services.AddScoped<IEmailSenderServices, AuthMessageSender>();
             services.AddScoped<IAviseMeServices, AviseMeServices>();
             services.AddScoped<IAviseMeRepository, AviseMeRepository>();
+            services.AddScoped<IEmpresaServices, EmpresaServices>();
+            services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            services.AddScoped<IConsultaCnpjAwsApi, ConsultaReceitaAwsApi>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             services.AddDbContext<EcommerceContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("EcommerceContext")));
