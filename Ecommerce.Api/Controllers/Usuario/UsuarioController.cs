@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Ecommerce.Api.Controllers.Usuario.Dto;
+using System.Linq;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace Ecommerce.Api.Controllers.Usuario
 {
@@ -22,6 +25,7 @@ namespace Ecommerce.Api.Controllers.Usuario
         private readonly TokenProvider _tokenProvider;
 
         private const string MensagemUsuarioSenhaInvalido = "Email ou senha Inválidos";
+        private const string MensagemUsuarioNaoAdministrador = "Usuario precisa ser administrador";
 
         public UsuarioController(IUserAuthentication userAuthentication, UserManager<IdentityUser> userManager, TokenProvider tokenProvider)
         {
@@ -38,16 +42,26 @@ namespace Ecommerce.Api.Controllers.Usuario
             if (user is null)
                 return BadRequest();
 
-            var identityUser = await _userManager.FindByEmailAsync(user.email);
-
             var result = await _userAuthentication.IdentityAuthenticate(user.email, user.password, true);
 
             if (result is false)
                 return Unauthorized(MensagemUsuarioSenhaInvalido);
-            
-            var (token,expiresDate) = _tokenProvider.GenerateJwtToken(identityUser);
+
+            var identityUser = await _userManager.FindByEmailAsync(user.email);
+
+            var claims = await _userManager.GetClaimsAsync(identityUser);
+
+            if(NaoEhAdministrador(claims))
+                return Unauthorized(MensagemUsuarioNaoAdministrador);
+
+            var (token,expiresDate) = _tokenProvider.GenerateJwtToken(identityUser, claims.FirstOrDefault());
 
             return Ok(new LoginResponse(status: true, token, expiresDate));
+        }
+
+        private static bool NaoEhAdministrador(IEnumerable<Claim> claims)
+        {
+            return !claims.Any(x => x.Type == "AdminClaim");
         }
     }
 }

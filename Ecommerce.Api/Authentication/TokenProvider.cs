@@ -18,7 +18,7 @@ namespace Ecommerce.Api.Authentication
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
-        public (string,DateTime) GenerateJwtToken(IdentityUser user)
+        public (string,DateTime) GenerateJwtToken(IdentityUser user, Claim claim)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -31,7 +31,8 @@ namespace Ecommerce.Api.Authentication
                     new Claim("Id", user.Id),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, claim != null ? claim.Type : "normal")
                 }),
                 Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
