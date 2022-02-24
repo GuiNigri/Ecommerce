@@ -40,7 +40,7 @@ namespace Ecommerce.Api.Controllers.Pedido
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> RegistrarPedido(RegistrarPedidoRequest request)
+        public async Task<ActionResult<RegistrarPedidoResponse>> RegistrarPedido(RegistrarPedidoRequest request)
         {
             if (request is null)
                 return BadRequest();
@@ -81,7 +81,7 @@ namespace Ecommerce.Api.Controllers.Pedido
         private async Task<PedidoModel> CriarPedido(RegistrarPedidoRequest request)
         {
             const string tipoEnvioProprio = "proprio";
-            const int statusAguardando = 0;
+            const int statusConfirmado = 1;
 
             var claim = User.Claims.FirstOrDefault(x => x.Type == "Id");
 
@@ -90,6 +90,9 @@ namespace Ecommerce.Api.Controllers.Pedido
             var usuario = await _usuarioServices.GetByUserIdAsync(userIdentity.Id);
 
             var endereco = await _empresaServices.GetEmpresaByUserId(userIdentity.Id);
+
+            var dataAtualBrasil = TimeZoneInfo.ConvertTime(DateTime.Now,
+                    TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
 
             var pedido = new PedidoModel(
                 usuario.Id,
@@ -107,9 +110,9 @@ namespace Ecommerce.Api.Controllers.Pedido
                 endereco.Bairro,
                 endereco.Municipio,
                 endereco.Uf,
-                dataPedido: DateTime.Now,
+                dataPedido: dataAtualBrasil,
                 request.Observacoes,
-                statusAguardando
+                statusConfirmado
                 );
 
             pedido.SetTipoDeEnvio(tipoEnvioProprio);
