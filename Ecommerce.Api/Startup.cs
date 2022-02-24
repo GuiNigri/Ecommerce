@@ -21,6 +21,13 @@ using Microsoft.EntityFrameworkCore;
 using EcommercePrestige.Data.Ecommerce.Context;
 using EcommercePrestige.EmailApi;
 using EcommercePrestige.ConsultaReceitaApi;
+using EcommercePrestige.Model.Interfaces.Infrastructure;
+using EcommercePrestige.CorreiosApi;
+using EcommercePrestige.Model.Interfaces.UoW;
+using EcommercePrestige.Data.UoW;
+using EcommercePrestige.CieloApiWebServices;
+using EcommercePrestige.StoneCheckoutApi;
+using EcommercePrestige.Model.Entity;
 
 namespace Ecommerce.Api
 {
@@ -63,7 +70,9 @@ namespace Ecommerce.Api
                     };
                 });
 
-            
+            services.AddAuthorization(
+                options => options.AddPolicy("Admin", policy => policy.RequireClaim("AdminClaim")));
+
             services.AddScoped<IUserAuthentication, UserAuthentication>();
             services.AddScoped<TokenProvider>();
             services.AddScoped<IProdutoCorServices, ProdutoCorServices>();
@@ -75,6 +84,22 @@ namespace Ecommerce.Api
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             services.AddScoped<IConsultaCnpjAwsApi, ConsultaReceitaAwsApi>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioServices, UsuarioServices>();
+            services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<ISuporteServices, SuporteServices>();
+            services.AddScoped<ISuporteRepository, SuporteRepository>();
+            services.AddScoped<IKitsServices, KitServices>();
+            services.AddScoped<IKitsRepository, KitRepository>();
+            services.AddScoped<ICorreiosInfrastructure, CorreioInfrastructure>();
+            services.AddScoped<Correios.NET.Services>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<ICieloCheckout, CieloCheckout>();
+            services.AddScoped<IPagarMeCheckout, PagarMeCheckout>();
+
+            services.Configure<PagarMeSettingsModel>(Configuration.GetSection("PagarMeSettings"));
+            services.Configure<EmailSettingsModel>(Configuration.GetSection("EmailSettings"));
 
             services.AddDbContext<EcommerceContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("EcommerceContext")));
@@ -87,6 +112,7 @@ namespace Ecommerce.Api
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddHttpClient();
             //services.RegisterInjections(Configuration);
         }
 

@@ -12,7 +12,7 @@ namespace Ecommerce.Api.Controllers.Empresa
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "AdminClaim")]
     public class EmpresaController : ControllerBase
     {
         private readonly IEmpresaServices _empresaService;

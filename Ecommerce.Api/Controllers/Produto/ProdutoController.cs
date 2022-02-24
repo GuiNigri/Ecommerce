@@ -12,7 +12,7 @@ namespace Ecommerce.Api.Controllers.Produto
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "AdminClaim")]
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoCorServices _produtoCorService;
