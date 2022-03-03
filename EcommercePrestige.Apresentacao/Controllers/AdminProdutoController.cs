@@ -94,6 +94,21 @@ namespace EcommercePrestige.Apresentacao.Controllers
             return RedirectToAction("EditProduto", new {id=idProduto});
         }
 
+        public async Task<IActionResult> AlterarCodigoBarras(int id, string codigoBarras, int idProduto)
+        {
+            try
+            {
+                await _produtoCorAppServices.AlterarCodigoBarrasAsync(id, codigoBarras);
+                TempData["Success"] = "Alteração processada com sucesso";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Ocorreu um erro ao processar a alteração";
+            }
+
+            return RedirectToAction("EditProduto", new { id = idProduto });
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> CreateEtapaBasico()

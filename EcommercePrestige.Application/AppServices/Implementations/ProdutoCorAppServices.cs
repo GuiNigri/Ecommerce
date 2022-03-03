@@ -88,7 +88,8 @@ namespace EcommercePrestige.Application.AppServices.Implementations
                     Silver = item.PedidoSilver,
                     Basic = item.PedidoBasic,
                     ProdutoId = item.ProdutoModelId,
-                    StatusAtivacao = item.StatusAtivacao
+                    StatusAtivacao = item.StatusAtivacao,
+                    CodigoBarras = item.CodigoBarras
                 };
 
                 lista.Add(produtoCorInputModel);
@@ -108,6 +109,13 @@ namespace EcommercePrestige.Application.AppServices.Implementations
         {
             _unitOfWork.BeginTransaction();
             await _domainService.AlterarEstoqueAsync(id,quantidade);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task AlterarCodigoBarrasAsync(int id, string codigoBarras)
+        {
+            _unitOfWork.BeginTransaction();
+            await _domainService.AlterarCodigoBarrasAsync(id, codigoBarras);
             await _unitOfWork.CommitAsync();
         }
 

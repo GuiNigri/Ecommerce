@@ -119,6 +119,7 @@ namespace EcommercePrestige.Application.ViewModel
         public string ImgCor { get; set; }
         public string CodigoInterno { get; set; }
         public int Estoque { get; set; }
+        public string CodigoBarras { get; set; }
         public bool Gold { get; set; }
         public bool Silver { get; set; }
         public bool Basic { get; set; }

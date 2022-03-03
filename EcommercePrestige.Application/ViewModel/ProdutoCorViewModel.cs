@@ -8,6 +8,7 @@
         public string DescricaoCor { get; set; }
         public string CodigoInternoCor { get; set; }
         public int Estoque { get; set; }
+        public string CodigoBarras { get; set; }
         public int ProdutosModelId { get; set; }
         public string ProdutosModel { get; set; }
         public bool PedidosGold { get; set; }

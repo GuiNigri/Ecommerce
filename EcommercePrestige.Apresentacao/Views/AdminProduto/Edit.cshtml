@@ -60,12 +60,13 @@
         </form>
         <hr />
         <div class="table-responsive">
-            <table style="width: 50%" class="table table-bordered" id="dataTable">
+            <table style="width: 80%" class="table table-bordered" id="dataTable">
                 <thead>
                     <tr>
                         <th class="text-center">CI</th>
                         <th class="text-center">Cor</th>
                         <th class="text-center">Estoque</th>
+                        <th class="text-center">Código De Barras</th>
                         <th class="text-center">Gold</th>
                         <th class="text-center">Silver</th>
                         <th class="text-center">Basic</th>
@@ -92,6 +93,14 @@
                                             <input type="hidden" name="id" value="@item.Id">
                                             <input type="hidden" name="idProduto" value="@Model.IdProd">
                                             <input class="input text-center" id="quantNumber" name="quantNumber" type="number" value="@item.Estoque">
+                                            <button class="button-update"><i class="fas fa-sync-alt" style="margin-left: 10px;"></i></button>
+                                        </form>
+                                    </td>
+                                    <td class="qty text-center">
+                                        <form style="display: inline-flex;" asp-controller="AdminProduto" asp-action="AlterarCodigoBarras">
+                                            <input type="hidden" name="id" value="@item.Id">
+                                            <input type="hidden" name="idProduto" value="@Model.IdProd">
+                                            <input class="input text-center" id="codigoBarras" name="codigoBarras" type="text" value="@item.CodigoBarras">
                                             <button class="button-update"><i class="fas fa-sync-alt" style="margin-left: 10px;"></i></button>
                                         </form>
                                     </td>
