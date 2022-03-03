@@ -14,12 +14,13 @@
                 <partial name="InputCorPartialView" model="@Model.Cor"/>
             </form>
             <div class="table-responsive">
-                <table style="width: 50%" class="table table-bordered" id="dataTable">
+                <table style="width: 80%" class="table table-bordered" id="dataTable">
                     <thead>
                         <tr>
                             <th class="text-center">Codigo Interno</th>
                             <th class="text-center">Cor</th>
                             <th class="text-center">Estoque</th>
+                            <th class="text-center">Codigo De Barras</th>
                             <th class="text-center">Gold</th>
                             <th class="text-center">Silver</th>
                             <th class="text-center">Basic</th>
@@ -42,6 +43,7 @@
                                             </ul>
                                         </td>
                                         <td class="text-center">@item.Estoque</td>
+                                        <td class="text-center">@item.CodigoBarras</td>
                                         @if (item.Gold)
                                         {
                                             <td class="text-center"><i class="fas fa-check-circle" style="color: green"></i></td>

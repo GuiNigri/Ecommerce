@@ -111,6 +111,15 @@ namespace EcommercePrestige.Services
             }
         }
 
+        public async Task AlterarCodigoBarrasAsync(int id, string codigoBarras)
+        {
+            var produtoCorModel = await _produtoCorRepository.GetByIdAsync(id);
+
+            produtoCorModel.AtualizarCodigoBarras(codigoBarras);
+
+            await _produtoCorRepository.UpdateAsync(produtoCorModel);
+        }
+
         private async Task EnviarEmailAviseMe(string armação, string cor, string email)
         {
             const string subject = "Sua armação já está disponível";

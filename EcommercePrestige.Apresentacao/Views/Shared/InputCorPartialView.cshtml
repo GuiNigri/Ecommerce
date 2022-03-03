@@ -16,16 +16,20 @@
         <input class="form-control" asp-for="CodigoInterno" />
     </div>
     <div class="col-md-2" style="align-self: flex-end;">
-        <input type="checkbox" asp-for="Gold" data-val="true" and value="true" />
-        <label class="control-label" asp-for="Gold">Kit Gold</label>
+        <label class="control-label" asp-for="CodigoBarras"> Codigo De Barras</label>
+        <input class="form-control" asp-for="CodigoBarras" />
     </div>
-    <div class="col-md-2" style="align-self: flex-end;">
+    <div class="col-md-1" style="align-self: flex-end;">
+        <input type="checkbox" asp-for="Gold" data-val="true" and value="true" />
+        <label class="control-label" asp-for="Gold">Gold</label>
+    </div>
+    <div class="col-md-1" style="align-self: flex-end;">
         <input type="checkbox" asp-for="Silver" data-val="true" and value="true" />
-        <label class="control-label" asp-for="Silver">Kit Silver</label>
+        <label class="control-label" asp-for="Silver">Silver</label>
     </div>
     <div class="col-md-2" style="align-self: flex-end;">
         <input type="checkbox" asp-for="Basic" data-val="true" and value="true" />
-        <label class="control-label" asp-for="Basic">Kit Basic</label>
+        <label class="control-label" asp-for="Basic">Basic</label>
     </div>
     <div class="col-md-2" style="align-self: flex-end;">
         <br />

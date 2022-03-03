@@ -98,6 +98,11 @@
             Estoque = estoque;
         }
 
+        public void AtualizarCodigoBarras(string codigoBarras)
+        {
+            CodigoBarras = codigoBarras;
+        }
+
         public void SetStatusAtivacao(string statusAtivacao)
         {
             StatusAtivacao = statusAtivacao;

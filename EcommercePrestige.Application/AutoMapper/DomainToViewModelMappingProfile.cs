@@ -32,7 +32,8 @@ namespace EcommercePrestige.Application.AutoMapper
                 .ForMember(x => x.ImgCor, map => map.MapFrom(y => y.CorModel.ImgUrl))
                 .ForMember(x => x.CorId, map => map.MapFrom(y => y.CorModelId))
                 .ForMember(x => x.DescricaoCor, map => map.MapFrom(y => y.CorModel.Descricao))
-                .ForMember(x => x.CodigoInternoCor, map => map.MapFrom(y => y.CodigoInterno));
+                .ForMember(x => x.CodigoInternoCor, map => map.MapFrom(y => y.CodigoInterno))
+                .ForMember(x => x.CodigoBarras, map => map.MapFrom(y => y.CodigoBarras));
             CreateMap<CidadesModel, CidadesViewModel>();
             CreateMap<FiltroModel, FiltroProdutoViewModel>();
             CreateMap<KitModel, KitsViewModel>()
@@ -51,7 +52,8 @@ namespace EcommercePrestige.Application.AutoMapper
                 .ForMember(x => x.Gold, map => map.MapFrom(y => y.PedidoGold))
                 .ForMember(x => x.Silver, map => map.MapFrom(y => y.PedidoSilver))
                 .ForMember(x => x.ProdutoId, map => map.MapFrom(y => y.ProdutoModelId))
-                .ForMember(x => x.Id, map => map.UseDestinationValue());
+                .ForMember(x => x.Id, map => map.UseDestinationValue())
+                .ForMember(x => x.CodigoBarras, map => map.MapFrom(y => y.CodigoBarras));
             CreateMap<ProdutoFotoModel, ProdutoFotoInputModel>()
                 .ForMember(x => x.ProdutoId, map => map.MapFrom(y => y.ProdutoModelId))
                 .ForMember(x => x.Foto, map => map.MapFrom(y => y.UriBlob))

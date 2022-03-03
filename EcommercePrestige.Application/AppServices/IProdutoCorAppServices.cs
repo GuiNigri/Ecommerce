@@ -15,5 +15,6 @@ namespace EcommercePrestige.Application.AppServices
         Task UpdateAsync(int id);
         Task AlterarAtivacaoKitNoProduto(int idCor, string kit);
         Task AlterarEstoqueAsync(int id, int quantidade);
+        Task AlterarCodigoBarrasAsync(int id, string codigoBarras);
     }
 }
