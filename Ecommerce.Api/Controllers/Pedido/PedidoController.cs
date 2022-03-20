@@ -45,9 +45,11 @@ namespace Ecommerce.Api.Controllers.Pedido
             if (request is null)
                 return BadRequest();
 
-            var pedido = await CriarPedido(request);
+            var (usuario, identity) = await ObterDadosDoUsuario();
 
-            var result = await GravarPedido(request, pedido);
+            var pedido = await CriarPedido(request, usuario, identity);
+
+            var result = await GravarPedido(request, pedido, usuario, identity);
             
             if (result is false)
                 return UnprocessableEntity();
@@ -55,7 +57,18 @@ namespace Ecommerce.Api.Controllers.Pedido
             return Created("", new RegistrarPedidoResponse { numeroPedido = pedido.Id });
         }
 
-        private async Task<bool> GravarPedido(RegistrarPedidoRequest request, PedidoModel pedido)
+        private async Task<(UsuarioModel, IdentityUser)> ObterDadosDoUsuario()
+        {
+            var claim = User.Claims.FirstOrDefault(x => x.Type == "Id");
+
+            var userIdentity = await _userManager.FindByIdAsync(claim.Value);
+
+            var usuario = await _usuarioServices.GetByUserIdAsync(userIdentity.Id);
+
+            return (usuario, userIdentity);
+        }
+
+        private async Task<bool> GravarPedido(RegistrarPedidoRequest request, PedidoModel pedido, UsuarioModel usuario, IdentityUser identity)
         {
             try
             {
@@ -66,6 +79,8 @@ namespace Ecommerce.Api.Controllers.Pedido
                 var produtos = await CriarProdutos(request, idPedido);
 
                 await _pedidoService.CreateProdutosAsync(produtos, new List<PedidoKitModel>());
+
+                await _pedidoService.EnviarConfirmacaoPedidoEmail(idPedido, usuario.NomeCompleto, identity.Email);
 
                 transaction.Complete();
 
@@ -78,18 +93,12 @@ namespace Ecommerce.Api.Controllers.Pedido
 
         }
 
-        private async Task<PedidoModel> CriarPedido(RegistrarPedidoRequest request)
+        private async Task<PedidoModel> CriarPedido(RegistrarPedidoRequest request, UsuarioModel usuario, IdentityUser identity)
         {
             const string tipoEnvioProprio = "proprio";
             const int statusConfirmado = 1;
 
-            var claim = User.Claims.FirstOrDefault(x => x.Type == "Id");
-
-            var userIdentity = await _userManager.FindByIdAsync(claim.Value);
-
-            var usuario = await _usuarioServices.GetByUserIdAsync(userIdentity.Id);
-
-            var endereco = await _empresaServices.GetEmpresaByUserId(userIdentity.Id);
+            var endereco = await _empresaServices.GetEmpresaByUserId(identity.Id);
 
             var dataAtualBrasil = TimeZoneInfo.ConvertTime(DateTime.Now,
                     TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
