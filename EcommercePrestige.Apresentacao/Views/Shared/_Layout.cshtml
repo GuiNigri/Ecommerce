@@ -61,14 +61,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-8" style="text-align: -webkit-center;">
+                    <div id="texto-header" class="col-md-8" style="text-align: -webkit-center;">
                         <div id="top-header-slick">
                             @await Component.InvokeAsync("TextosTopHome")
                         </div>
                     </div>
                     <div class="col-md-4">
                         <ul class="header-btns pull-right" style="margin-top: 3px;">
-                            <li>
+                            <li id="btn-pesquisar">
                                 <a href="#" onclick="showSearch()"><i class="fa fa-search"></i></a>
                             </li>
                             <!-- Account -->
