@@ -3,8 +3,10 @@ using EcommercePrestige.Model.Entity;
 using EcommercePrestige.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,38 +25,54 @@ namespace Ecommerce.Api.Controllers.Pedido
         private readonly IEmpresaServices _empresaServices;
         private readonly IPedidoService _pedidoService;
         private readonly IProdutoCorServices _produtoCorServices;
+        private readonly ILogger _logger;
 
         public PedidoController(
             UserManager<IdentityUser> userManager,
             IUsuarioServices usuarioServices,
             IEmpresaServices empresaServices,
             IPedidoService pedidoService,
-            IProdutoCorServices produtoCorServices)
+            IProdutoCorServices produtoCorServices,
+            ILogger<PedidoController> logger)
         {
             _userManager = userManager;
             _usuarioServices = usuarioServices;
             _empresaServices = empresaServices;
             _pedidoService = pedidoService;
             _produtoCorServices = produtoCorServices;
+            _logger = logger;
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<RegistrarPedidoResponse>> RegistrarPedido(RegistrarPedidoRequest request)
         {
-            if (request is null)
-                return BadRequest();
+            try
+            {
+                if (request is null)
+                    return BadRequest();
 
-            var (usuario, identity) = await ObterDadosDoUsuario();
+                using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-            var pedido = await CriarPedido(request, usuario, identity);
+                var (usuario, identity) = await ObterDadosDoUsuario();
 
-            var result = await GravarPedido(request, pedido, usuario, identity);
-            
-            if (result is false)
-                return UnprocessableEntity();
+                var pedido = await CriarPedido(request, usuario, identity);
 
-            return Created("", new RegistrarPedidoResponse { numeroPedido = pedido.Id });
+                await GravarPedido(request, pedido, usuario, identity);
+
+                transaction.Complete();
+
+                _logger.LogInformation($"Pedido via api registrado com sucesso, n°: {pedido.Id}");
+
+                return Created("", new RegistrarPedidoResponse { numeroPedido = pedido.Id });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception.Message);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, exception);
+            }
+
         }
 
         private async Task<(UsuarioModel, IdentityUser)> ObterDadosDoUsuario()
@@ -68,29 +86,15 @@ namespace Ecommerce.Api.Controllers.Pedido
             return (usuario, userIdentity);
         }
 
-        private async Task<bool> GravarPedido(RegistrarPedidoRequest request, PedidoModel pedido, UsuarioModel usuario, IdentityUser identity)
+        private async Task GravarPedido(RegistrarPedidoRequest request, PedidoModel pedido, UsuarioModel usuario, IdentityUser identity)
         {
-            try
-            {
-                using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var idPedido = await _pedidoService.CreateReturningIdAsync(pedido);
 
-                var idPedido = await _pedidoService.CreateReturningIdAsync(pedido);
+            var produtos = await CriarProdutos(request, idPedido);
 
-                var produtos = await CriarProdutos(request, idPedido);
+            await _pedidoService.CreateProdutosAsync(produtos, new List<PedidoKitModel>());
 
-                await _pedidoService.CreateProdutosAsync(produtos, new List<PedidoKitModel>());
-
-                await _pedidoService.EnviarConfirmacaoPedidoEmail(idPedido, usuario.NomeCompleto, identity.Email);
-
-                transaction.Complete();
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
+            await _pedidoService.EnviarConfirmacaoPedidoEmail(idPedido, usuario.NomeCompleto, identity.Email);
         }
 
         private async Task<PedidoModel> CriarPedido(RegistrarPedidoRequest request, UsuarioModel usuario, IdentityUser identity)
