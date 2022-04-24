@@ -132,7 +132,7 @@ namespace EcommercePrestige.Apresentacao.Controllers
 
                    if (status)
                    {
-                       return await CreateCor(id);
+                       return await CreateCor(id, produtoCreateEtapaBasicaModel.Referencia);
                    }
 
                    produtoCreateEtapaBasicaModel.StatusModel = "Error";
@@ -176,7 +176,7 @@ namespace EcommercePrestige.Apresentacao.Controllers
         }
 
         [HttpGet]
-        private async Task<IActionResult> CreateCor(int idProduto)
+        private async Task<IActionResult> CreateCor(int idProduto, string referencia)
         {
             var coresSelect = await _corAppServices.GetAllAsync();
             return View("CreateCor", new ProdutoCreateEtapaCorModel(idProduto, null,null, coresSelect));
@@ -186,6 +186,8 @@ namespace EcommercePrestige.Apresentacao.Controllers
         {
             var produtoId = produtoCorInputModel.ProdutoId;
             string statusModel = null;
+
+            produtoCorInputModel.CodigoBarras = GerarCodigoBarras(produtoCorInputModel);
 
             var (status, mensagem) = await AdicionarCorAoProduto(produtoCorInputModel, produtoId);
 
@@ -200,6 +202,11 @@ namespace EcommercePrestige.Apresentacao.Controllers
             var coresSelect = await _corAppServices.GetAllAsync();
 
             return View("CreateCor", new ProdutoCreateEtapaCorModel(produtoId, listaCores,statusModel,coresSelect));
+        }
+
+        private static string GerarCodigoBarras(ProdutoCorInputModel produtoCorInputModel)
+        {
+            return $"{produtoCorInputModel.Referencia}/{produtoCorInputModel.CodigoInterno}";
         }
 
         public async Task<IActionResult> AddCorListaEdit(ProdutoCorInputModel produtoCorInputModel)

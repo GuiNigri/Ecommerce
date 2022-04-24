@@ -13,9 +13,9 @@ namespace EcommercePrestige.Application.ViewModel
         {
         }
 
-        public ProdutoCreateEtapaCorModel(int idProduto, IEnumerable<ProdutoCorInputModel> cores, string statusModel, IEnumerable<CorViewModel> coresSelect)
+        public ProdutoCreateEtapaCorModel(int idProduto, IEnumerable<ProdutoCorInputModel> cores, string statusModel, IEnumerable<CorViewModel> coresSelect, string referencia = null)
         {
-            Cor = new ProdutoCorInputModel(idProduto,coresSelect);
+            Cor = new ProdutoCorInputModel(idProduto, referencia, coresSelect);
             Cores = cores ?? new List<ProdutoCorInputModel>();
             StatusModel = statusModel;
         }
@@ -114,6 +114,7 @@ namespace EcommercePrestige.Application.ViewModel
     public class ProdutoCorInputModel:BaseViewModel
     {
         public int ProdutoId { get; set; }
+        public string Referencia { get; set; }
         public int CorId { get; set; }
         public string DescricaoCor { get; set; }
         public string ImgCor { get; set; }
@@ -128,9 +129,10 @@ namespace EcommercePrestige.Application.ViewModel
         public List<SelectListItem> CoresSelect { get; set; }
 
         public ProdutoCorInputModel() {}
-        public ProdutoCorInputModel(int id, IEnumerable<CorViewModel> corSelect)
+        public ProdutoCorInputModel(int id, string referencia, IEnumerable<CorViewModel> corSelect)
         {
             ProdutoId = id;
+            Referencia = referencia;
             CoresSelect = PopulateCorRgb(corSelect);
         }
 

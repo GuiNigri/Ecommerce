@@ -2,6 +2,7 @@
 
 <div class="form-group row">
     <input type="hidden" asp-for="ProdutoId" />
+    <input type="hidden" asp-for="Referencia" />
     <div class="col-md-2">
         <label class="control-label"> Cor</label>
         <select class="form-control" asp-for="CorId" asp-items="@Model.CoresSelect">
@@ -14,10 +15,6 @@
     <div class="col-md-1" style="align-self: flex-end;">
         <label class="control-label" asp-for="CodigoInterno"> CI</label>
         <input class="form-control" asp-for="CodigoInterno" />
-    </div>
-    <div class="col-md-2" style="align-self: flex-end;">
-        <label class="control-label" asp-for="CodigoBarras"> Codigo De Barras</label>
-        <input class="form-control" asp-for="CodigoBarras" />
     </div>
     <div class="col-md-1" style="align-self: flex-end;">
         <input type="checkbox" asp-for="Gold" data-val="true" and value="true" />

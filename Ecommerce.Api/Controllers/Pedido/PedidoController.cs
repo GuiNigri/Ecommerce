@@ -3,8 +3,10 @@ using EcommercePrestige.Model.Entity;
 using EcommercePrestige.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,73 +25,84 @@ namespace Ecommerce.Api.Controllers.Pedido
         private readonly IEmpresaServices _empresaServices;
         private readonly IPedidoService _pedidoService;
         private readonly IProdutoCorServices _produtoCorServices;
+        private readonly ILogger _logger;
 
         public PedidoController(
             UserManager<IdentityUser> userManager,
             IUsuarioServices usuarioServices,
             IEmpresaServices empresaServices,
             IPedidoService pedidoService,
-            IProdutoCorServices produtoCorServices)
+            IProdutoCorServices produtoCorServices,
+            ILogger<PedidoController> logger)
         {
             _userManager = userManager;
             _usuarioServices = usuarioServices;
             _empresaServices = empresaServices;
             _pedidoService = pedidoService;
             _produtoCorServices = produtoCorServices;
+            _logger = logger;
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<RegistrarPedidoResponse>> RegistrarPedido(RegistrarPedidoRequest request)
         {
-            if (request is null)
-                return BadRequest();
-
-            var pedido = await CriarPedido(request);
-
-            var result = await GravarPedido(request, pedido);
-            
-            if (result is false)
-                return UnprocessableEntity();
-
-            return Created("", new RegistrarPedidoResponse { numeroPedido = pedido.Id });
-        }
-
-        private async Task<bool> GravarPedido(RegistrarPedidoRequest request, PedidoModel pedido)
-        {
             try
             {
+                if (request is null)
+                    return BadRequest();
+
                 using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-                var idPedido = await _pedidoService.CreateReturningIdAsync(pedido);
+                var (usuario, identity) = await ObterDadosDoUsuario();
 
-                var produtos = await CriarProdutos(request, idPedido);
+                var pedido = await CriarPedido(request, usuario, identity);
 
-                await _pedidoService.CreateProdutosAsync(produtos, new List<PedidoKitModel>());
+                await GravarPedido(request, pedido, usuario, identity);
 
                 transaction.Complete();
 
-                return true;
+                _logger.LogInformation($"Pedido via api registrado com sucesso, n°: {pedido.Id}");
+
+                return Created("", new RegistrarPedidoResponse { numeroPedido = pedido.Id });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return false;
+                _logger.LogError(exception.Message);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, exception);
             }
 
         }
 
-        private async Task<PedidoModel> CriarPedido(RegistrarPedidoRequest request)
+        private async Task<(UsuarioModel, IdentityUser)> ObterDadosDoUsuario()
         {
-            const string tipoEnvioProprio = "proprio";
-            const int statusConfirmado = 1;
-
             var claim = User.Claims.FirstOrDefault(x => x.Type == "Id");
 
             var userIdentity = await _userManager.FindByIdAsync(claim.Value);
 
             var usuario = await _usuarioServices.GetByUserIdAsync(userIdentity.Id);
 
-            var endereco = await _empresaServices.GetEmpresaByUserId(userIdentity.Id);
+            return (usuario, userIdentity);
+        }
+
+        private async Task GravarPedido(RegistrarPedidoRequest request, PedidoModel pedido, UsuarioModel usuario, IdentityUser identity)
+        {
+            var idPedido = await _pedidoService.CreateReturningIdAsync(pedido);
+
+            var produtos = await CriarProdutos(request, idPedido);
+
+            await _pedidoService.CreateProdutosAsync(produtos, new List<PedidoKitModel>());
+
+            await _pedidoService.EnviarConfirmacaoPedidoEmail(idPedido, usuario.NomeCompleto, identity.Email);
+        }
+
+        private async Task<PedidoModel> CriarPedido(RegistrarPedidoRequest request, UsuarioModel usuario, IdentityUser identity)
+        {
+            const string tipoEnvioProprio = "proprio";
+            const int statusConfirmado = 1;
+
+            var endereco = await _empresaServices.GetEmpresaByUserId(identity.Id);
 
             var dataAtualBrasil = TimeZoneInfo.ConvertTime(DateTime.Now,
                     TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));

@@ -781,7 +781,7 @@ textarea.input {
   background: #FFF;
   -webkit-box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.175);
-  z-index: 100;
+  z-index: 1000;
   top: 100%;
   min-width: 200px;
   opacity: 0;
@@ -879,12 +879,45 @@ textarea.input {
   display: none;
 }
 
+#form-empresa {
+  float: right;
+}
+
+#btn-lista-produtos-carrinho {
+  margin-left: 25%;
+}
+
 @media only screen and (max-width: 991px) {
 
-    #top-header {
-        display: none;
-    }
-    #header .nav-toggle {
+  #top-header {
+    text-align: right;
+    padding-top: 10px;
+  }
+
+  #texto-header {
+    display: none;
+  }
+
+  #btn-pesquisar {
+    float: left;
+  }
+
+  #form-empresa {
+    float: none;
+  }
+
+  #carrinho-vazio {
+    text-align: center;
+  }
+
+  #btn-lista-produtos-carrinho {
+    margin-left: unset;
+  }
+
+  #app-card {
+    max-width: 100%;
+  }
+  #header .nav-toggle {
     display: inline-block;
   }
   header .pull-left, header .pull-right {
